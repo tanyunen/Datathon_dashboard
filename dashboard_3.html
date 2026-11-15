@@ -1,0 +1,341 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>SWIFT — Executive Intelligence Dashboard #3</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary-dark: #0f172a;
+            --mint-primary: #00875a;
+            --mint-dark: #006644;
+            --mint-light: #e6f4ea;
+            --mint-border: #34d399;
+            --bg-page: #f1f5f9;
+            --card-bg: #ffffff;
+            --text-main: #1e293b;
+            --text-muted: #475569;
+            --border: #cbd5e1;
+            --border-light: #e2e8f0;
+        }
+
+        html, body {
+            height: 100vh;
+            margin: 0;
+            padding: 8px;
+            overflow: hidden;
+            background-color: var(--bg-page);
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, Roboto, sans-serif;
+            color: var(--text-main);
+            -webkit-font-smoothing: antialiased;
+        }
+
+        .dashboard-wrapper {
+            width: 98vw;
+            max-width: 1750px;
+            height: 98vh;
+            margin: 0 auto;
+            display: grid;
+            grid-template-rows: auto auto 1fr;
+            gap: 10px;
+            box-sizing: border-box;
+        }
+
+        /* 1. Header with Mint Gradient Color Box */
+        .header-card {
+            background: linear-gradient(135deg, #00875a 0%, #006644 100%);
+            border-radius: 10px;
+            padding: 12px 22px;
+            border: 1px solid #005536;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 4px 12px rgba(0, 135, 90, 0.15);
+        }
+        .header-card h1 { margin: 0; font-size: 19px; font-weight: 800; color: #ffffff; letter-spacing: -0.3px; }
+        .header-card p { margin: 3px 0 0 0; font-size: 11.5px; color: #e2f8ed; text-transform: uppercase; font-weight: 600; letter-spacing: 0.5px; }
+        .badge { background: #ffffff; color: var(--mint-dark); border: 1px solid #a3e635; padding: 6px 14px; border-radius: 6px; font-size: 12px; font-weight: 800; text-transform: uppercase; letter-spacing: 0.5px; box-shadow: 0 2px 4px rgba(0,0,0,0.1); }
+
+        /* 2. Top Metric Cards Row */
+        .metrics-row {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 10px;
+        }
+        .metric-card {
+            background: linear-gradient(135deg, #ffffff 0%, #f0fdf4 100%);
+            padding: 10px 16px;
+            border-radius: 8px;
+            border: 1px solid var(--border);
+            border-left: 5px solid var(--mint-primary);
+            box-shadow: 0 2px 4px rgba(0,0,0,0.02);
+        }
+        .metric-card span {
+            display: block;
+            font-size: 11px;
+            font-weight: 700;
+            color: var(--text-muted);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-bottom: 2px;
+        }
+        .metric-card h3 {
+            margin: 0;
+            font-size: 15px;
+            font-weight: 800;
+            color: var(--primary-dark);
+        }
+
+        /* 3. Main 2-Column Split Grid */
+        .main-grid {
+            display: grid;
+            grid-template-columns: 1fr 1.25fr;
+            gap: 10px;
+            min-height: 0;
+            height: 100%;
+        }
+
+        /* Left Column: Charts Stack */
+        .charts-stack {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            min-height: 0;
+            height: 100%;
+        }
+        .chart-widget {
+            background: linear-gradient(135deg, #ffffff 0%, #f8fafc 100%);
+            border-radius: 8px;
+            padding: 8px;
+            border: 1px solid var(--border);
+            box-shadow: 0 2px 4px rgba(0,0,0,0.02);
+            flex: 1;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 0;
+            overflow: hidden;
+            border-top: 3px solid var(--mint-primary);
+        }
+        .chart-widget img {
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
+        }
+
+        /* Right Column */
+        .right-column {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            min-height: 0;
+            height: 100%;
+        }
+
+        /* Card Boxes */
+        .card-box {
+            background: linear-gradient(135deg, #ffffff 0%, #f4fbf7 100%);
+            border-radius: 8px;
+            border: 1px solid var(--border);
+            box-shadow: 0 2px 4px rgba(0,0,0,0.02);
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+            min-height: 0;
+        }
+        
+        .section-title {
+            background: linear-gradient(135deg, #e6f4ea 0%, #d1fae5 100%);
+            color: var(--mint-dark);
+            padding: 8px 14px;
+            font-size: 12px;
+            font-weight: 800;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            border-bottom: 2px solid var(--mint-border);
+        }
+
+        /* Table Styling */
+        table { width: 100%; border-collapse: collapse; font-size: 13px; }
+        th, td { padding: 7px 12px; border-bottom: 1px solid var(--border-light); text-align: left; }
+        th { color: var(--primary-dark); font-size: 11.5px; text-transform: uppercase; background: #f1f5f9; font-weight: 700; }
+        tr:nth-child(even) { background-color: rgba(240, 253, 244, 0.4); }
+        tr:last-child td { border-bottom: none; }
+
+        /* Full Detailed Insights Styling */
+        .insights-content {
+            padding: 12px 16px;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            overflow-y: auto;
+            flex: 1;
+            min-height: 0;
+            background: linear-gradient(180deg, #ffffff 0%, #f8fafc 100%);
+        }
+        .insight-section h4 {
+            margin: 0 0 3px 0;
+            color: var(--mint-primary);
+            font-size: 13px;
+            text-transform: uppercase;
+            font-weight: 800;
+            letter-spacing: 0.3px;
+        }
+        .insight-section p {
+            margin: 0 0 4px 0;
+            color: var(--text-main);
+            font-size: 13px;
+            line-height: 1.45;
+        }
+        .insight-section ul {
+            margin: 3px 0 0 16px;
+            padding: 0;
+            color: var(--text-main);
+            font-size: 13px;
+            line-height: 1.4;
+        }
+        .insight-section li {
+            margin-bottom: 3px;
+        }
+        .rule-callout {
+            background: #f0fdf4;
+            border-left: 4px solid var(--mint-primary);
+            padding: 8px 12px;
+            margin: 4px 0;
+            border-radius: 0 6px 6px 0;
+            font-size: 12.5px;
+            color: #166534;
+        }
+    </style>
+</head>
+<body>
+
+<div class="dashboard-wrapper">
+    <!-- 1. Header with Gradient Color Box -->
+    <div class="header-card">
+        <div>
+            <h1>SWIFT Datathon 2026 — Executive Intelligence Portal</h1>
+            <p>BIC8 Path Analysis & Intermediary Corridor Topologies: Quantifying Liquidity Drag</p>
+        </div>
+        <div class="badge">Dashboard #3</div>
+    </div>
+
+    <!-- 2. Top Metric Cards Row -->
+    <div class="metrics-row">
+        <div class="metric-card">
+            <span>Global Multi-Hop Ratio</span>
+            <h3>38.4% (Structural Reliance)</h3>
+        </div>
+        <div class="metric-card">
+            <span>Mean Intermediary Hops</span>
+            <h3>3.4 BICs per Corridor</h3>
+        </div>
+        <div class="metric-card">
+            <span>Corridor Liquidity Drag</span>
+            <h3>$1.2B Daily Capital Lockup</h3>
+        </div>
+        <div class="metric-card">
+            <span>High-Friction Corridor</span>
+            <h3>APAC ↔ EU (Max Latency Multiplier)</h3>
+        </div>
+    </div>
+
+    <!-- 3. Main 2-Column Split Grid -->
+    <div class="main-grid">
+        
+        <!-- Left: Large Charts Stack -->
+        <div class="charts-stack">
+            <div class="chart-widget">
+                <img src="dashboard3_chart1_corridors.png" alt="Top Intermediary Corridors Chart">
+            </div>
+            <div class="chart-widget">
+                <img src="dashboard3_chart2_liquidity_drag.png" alt="Intermediary Hops vs Capital Lockup Chart">
+            </div>
+        </div>
+
+        <!-- Right: Compact Table & Expanded Economic Brief -->
+        <div class="right-column">
+            
+            <!-- Performance Matrix Table -->
+            <div class="card-box" style="flex: 0.65;">
+                <div class="section-title">Corridor Topology Performance Matrix & Friction Analysis</div>
+                <div style="overflow-y: auto;">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Corridor / Path Lane</th>
+                                <th>Routing Classification</th>
+                                <th>Volume Share</th>
+                                <th>Capital Drag Impact</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td><strong>Intra-Europe (EU ↔ EU)</strong></td>
+                                <td>High-Volume Regional Hub</td>
+                                <td>38.2%</td>
+                                <td>Low latency; highly optimized single-hop handoffs.</td>
+                            </tr>
+                            <tr>
+                                <td><strong>NA ↔ Europe</strong></td>
+                                <td>Transatlantic Correspondent Lane</td>
+                                <td>28.5%</td>
+                                <td>Moderate pre-funding requirements across major BICs.</td>
+                            </tr>
+                            <tr>
+                                <td><strong>APAC ↔ Europe</strong></td>
+                                <td>Multi-Tiered Cross-Border Corridor</td>
+                                <td>18.1%</td>
+                                <td>Severe timezone handoff friction and multi-hop delay.</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- Comprehensive Executive Analytical Brief -->
+            <div class="card-box" style="flex: 1.65;">
+                <div class="section-title">Executive Analytical Brief & Strategic Business Rules</div>
+                <div class="insights-content">
+                    <div class="insight-section">
+                        <h4>🌐 1. Macro Corridor Topology & Intermediary Concentration</h4>
+                        <p>Mapping transaction flows across global correspondence corridors reveals heavy structural dependence on multi-hop intermediary nodes (BIC8 paths):</p>
+                        <ul>
+                            <li><strong>Hub-and-Spoke Bottlenecks:</strong> High-volume corridors like APAC-to-Europe experience heavy congestion because payments must pass through legacy mega-correspondent clearing hubs.</li>
+                            <li><strong>Intermediary Proliferation:</strong> Each additional participant node compounds reconciliation friction across independent regional ledgers.</li>
+                        </ul>
+                    </div>
+
+                    <div class="insight-section">
+                        <h4>💰 2. Exponential Capital Liquidity Drag ($M)</h4>
+                        <p>Multiplying transaction amounts by multi-hop transit duration uncovers an exponential penalty curve:</p>
+                        <ul>
+                            <li><strong>Nostro Account Paralysis:</strong> Multi-hop chains (4+ hops) trap billions in idle liquidity across intermediary nostro/vostro accounts.</li>
+                            <li><strong>Velocity Drag Coefficient:</strong> Capital velocity drops sharply as routing length scales, disproportionately impacting corporate treasury flows.</li>
+                        </ul>
+                    </div>
+
+                    <div class="insight-section">
+                        <h4>⚡ 3. Core Business Rule: Corridor Friction & Dynamic Routing (CF-DRR)</h4>
+                        <div class="rule-callout">
+                            <strong>Rule Formulation:</strong> If a cross-border payment sequence projected across a multi-hop <code>BIC8_PATH</code> exceeds the calculated Liquidity Drag Threshold (<code>Amount × Intermediary Hops > Risk Limit</code>), the system must dynamically trigger an automated <strong>Smart-Routing Optimization Protocol</strong>, bypassing congested intermediary correspondent ledgers.
+                        </div>
+                    </div>
+
+                    <div class="insight-section">
+                        <h4>🚀 4. Strategic Recommendations for Corridor Optimization</h4>
+                        <ul>
+                            <li><strong>Dynamic Corridor Rerouting:</strong> Implement automated APIs to reroute high-risk corporate and cover payments through direct bilateral rails when intermediary congestion spikes.</li>
+                            <li><strong>Consolidated Liquidity Pools:</strong> Deploy multi-currency liquidity hubs to eliminate currency-bridging intermediary hops and free trapped capital.</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+
+    </div>
+</div>
+
+</body>
+</html>

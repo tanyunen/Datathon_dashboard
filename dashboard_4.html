@@ -1,0 +1,534 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Dashboard 4 | Business vs Consumer Analysis</title>
+
+<style>
+:root {
+    --green: #176b4d;
+    --dark-green: #104b38;
+    --light-green: #e9f4ee;
+    --bg: #f3f6f4;
+    --white: #ffffff;
+    --text: #24352d;
+    --muted: #68776e;
+    --border: #dce6df;
+}
+
+* {
+    box-sizing: border-box;
+}
+
+body {
+    margin: 0;
+    font-family: Arial, sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    overflow: hidden;
+}
+
+.dashboard {
+    height: 100vh;
+    display: grid;
+    grid-template-rows: 62px 86px minmax(0, 1fr) 22px;
+    gap: 10px;
+    padding: 12px;
+}
+
+.header {
+    background: var(--dark-green);
+    color: white;
+    border-radius: 10px;
+    padding: 10px 20px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.header h1 {
+    font-size: 21px;
+    margin: 0;
+}
+
+.header span {
+    font-size: 11px;
+    opacity: 0.85;
+}
+
+.kpis {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 10px;
+}
+
+.kpi {
+    background: white;
+    border: 1px solid var(--border);
+    border-left: 5px solid var(--green);
+    border-radius: 9px;
+    padding: 10px 15px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    min-width: 0;
+}
+
+.kpi-label {
+    color: var(--muted);
+    font-size: 11px;
+    margin-bottom: 5px;
+}
+
+.kpi-value {
+    color: var(--dark-green);
+    font-size: 22px;
+    font-weight: bold;
+}
+
+.kpi-note {
+    font-size: 10px;
+    color: var(--muted);
+    margin-top: 3px;
+}
+
+.main {
+    display: grid;
+    grid-template-columns: 1.1fr 0.9fr;
+    gap: 10px;
+    min-height: 0;
+}
+
+.column {
+    display: grid;
+    grid-template-rows: repeat(4, minmax(0, 1fr));
+    gap: 10px;
+    min-height: 0;
+}
+
+.left-column {
+    grid-template-rows: 1.2fr 0.8fr;
+}
+
+.panel {
+    background: white;
+    border: 1px solid var(--border);
+    border-radius: 9px;
+    padding: 13px;
+    min-height: 0;
+    min-width: 0;
+    display: flex;
+    flex-direction: column;
+    overflow: auto;
+    resize: vertical;
+}
+
+.panel h2 {
+    font-size: 14px;
+    color: var(--dark-green);
+    margin: 0 0 10px;
+    padding-bottom: 7px;
+    border-bottom: 2px solid var(--light-green);
+}
+
+.panel h3 {
+    font-size: 12px;
+    color: var(--green);
+    margin: 10px 0 5px;
+}
+
+.panel p {
+    font-size: 11px;
+    line-height: 1.5;
+    margin: 4px 0;
+}
+
+.panel li {
+    font-size: 11px;
+    line-height: 1.45;
+    margin-bottom: 5px;
+}
+
+.chart-image {
+    width: 100%;
+    height: auto;
+    object-fit: contain;
+    border-radius: 5px;
+}
+
+.table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 11px;
+}
+
+.table th {
+    background: var(--light-green);
+    color: var(--dark-green);
+    text-align: left;
+    padding: 8px;
+}
+
+.table td {
+    padding: 7px 8px;
+    border-bottom: 1px solid var(--border);
+}
+
+.table tr:last-child td {
+    font-weight: bold;
+}
+
+.highlight {
+    background: var(--light-green);
+    border-left: 4px solid var(--green);
+    border-radius: 5px;
+    padding: 9px 11px;
+    margin-top: 8px;
+}
+
+.highlight strong {
+    color: var(--dark-green);
+}
+
+.core-insight {
+    background: var(--dark-green);
+    color: white;
+    padding: 10px;
+    border-radius: 7px;
+    margin-top: 10px;
+    font-size: 12px;
+    line-height: 1.5;
+}
+
+.core-insight strong {
+    color: #bde8ce;
+}
+
+.rule {
+    border-bottom: 1px solid var(--border);
+    padding: 6px 0;
+}
+
+.rule:last-child {
+    border-bottom: none;
+}
+
+.rule strong {
+    color: var(--green);
+    font-size: 11px;
+}
+
+.rule p {
+    margin-top: 3px;
+}
+
+.footer {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    color: var(--muted);
+    font-size: 9px;
+    padding: 0 5px;
+}
+
+@media (max-width: 900px) {
+    body {
+        overflow: auto;
+    }
+
+    .dashboard {
+        height: auto;
+        min-height: 100vh;
+        grid-template-rows: auto auto auto auto;
+    }
+
+    .kpis {
+        grid-template-columns: repeat(2, 1fr);
+    }
+
+    .main {
+        grid-template-columns: 1fr;
+    }
+
+    .column,
+    .left-column {
+        grid-template-rows: auto;
+    }
+
+    .panel {
+        min-height: 250px;
+    }
+}
+</style>
+</head>
+
+<body>
+
+<div class="dashboard">
+
+    <!-- HEADER -->
+    <header class="header">
+        <h1>BUSINESS vs CONSUMER TRANSACTION ANALYSIS</h1>
+        <span>FEATURE GROUP 2 | PARTY PROFILES & DEMOGRAPHICS</span>
+    </header>
+
+    <!-- KPI CARDS -->
+    <section class="kpis">
+
+        <div class="kpi">
+            <div class="kpi-label">TOTAL TRANSACTIONS</div>
+            <div class="kpi-value">10.00M</div>
+            <div class="kpi-note">Complete dataset</div>
+        </div>
+
+        <div class="kpi">
+            <div class="kpi-label">BUSINESS SENDERS</div>
+            <div class="kpi-value">78.75%</div>
+            <div class="kpi-note">7,874,637 transactions</div>
+        </div>
+
+        <div class="kpi">
+            <div class="kpi-label">BUSINESS MEDIAN VALUE</div>
+            <div class="kpi-value">$5,537.36</div>
+            <div class="kpi-note">Median USD transaction value</div>
+        </div>
+
+        <div class="kpi">
+            <div class="kpi-label">BUSINESS vs CONSUMER</div>
+            <div class="kpi-value">7.17×</div>
+            <div class="kpi-note">Median transaction value ratio</div>
+        </div>
+
+    </section>
+
+    <!-- MAIN CONTENT -->
+    <main class="main">
+
+        <!-- LEFT COLUMN -->
+        <div class="column left-column">
+
+            <!-- BOX 1 -->
+            <section class="panel">
+                <h2>1. Transaction Value & Party Profile Analysis</h2>
+
+                <img
+                    src="dashboard_party_type_styled.png"
+                    alt="Business and Consumer transaction analysis charts"
+                    class="chart-image"
+                >
+
+                <div class="highlight">
+                    <strong>Key observation:</strong>
+                    Business senders have a substantially higher median
+                    transaction value than Consumer senders.
+                </div>
+            </section>
+
+            <!-- BOX 2 -->
+            <section class="panel">
+                <h2>2. Sender-Beneficiary Combination</h2>
+
+                <p>
+                    Transactions are classified into four combinations
+                    based on the sender and beneficiary types.
+                </p>
+
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th>Transaction Pair</th>
+                            <th>Transactions</th>
+                            <th>Share</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>B → B</td>
+                            <td>2,270,945</td>
+                            <td>22.71%</td>
+                        </tr>
+                        <tr>
+                            <td>B → C</td>
+                            <td>5,603,692</td>
+                            <td>56.04%</td>
+                        </tr>
+                        <tr>
+                            <td>C → B</td>
+                            <td>610,605</td>
+                            <td>6.11%</td>
+                        </tr>
+                        <tr>
+                            <td>C → C</td>
+                            <td>1,514,758</td>
+                            <td>15.15%</td>
+                        </tr>
+                    </tbody>
+                </table>
+
+                <div class="highlight">
+                    <strong>Dominant combination:</strong>
+                    B → C accounts for 56.04% of all transactions,
+                    making it the largest party-pair category.
+                </div>
+
+                <h3>Party Classification</h3>
+                <p><strong>B</strong> = Business</p>
+                <p><strong>C</strong> = Consumer</p>
+                <p>
+                    The arrow represents the direction of payment,
+                    from sender to beneficiary.
+                </p>
+            </section>
+
+        </div>
+
+        <!-- RIGHT COLUMN -->
+        <div class="column">
+
+            <!-- BOX 3 -->
+            <section class="panel">
+                <h2>3. Key Analytical Findings</h2>
+
+                <div class="rule">
+                    <strong>Finding 1 | Business Transaction Dominance</strong>
+                    <p>
+                        Business senders account for 7,874,637 transactions
+                        (78.75%), approximately 3.7 times the number of
+                        Consumer sender transactions.
+                    </p>
+                </div>
+
+                <div class="rule">
+                    <strong>Finding 2 | Higher Typical Transaction Value</strong>
+                    <p>
+                        Business senders have a median transaction value
+                        of $5,537.36, compared with $772.62 for Consumer
+                        senders. This represents a 7.17× difference.
+                    </p>
+                </div>
+
+                <div class="rule">
+                    <strong>Finding 3 | Dominant Payment Combination</strong>
+                    <p>
+                        Business-to-Consumer (B→C) transfers form the
+                        largest party-pair category, representing 56.04%
+                        of all transactions.
+                    </p>
+                </div>
+
+                <div class="rule">
+                    <strong>Finding 4 | Average vs Median</strong>
+                    <p>
+                        Average transaction values are substantially
+                        higher than median values for both groups,
+                        indicating that high-value observations influence
+                        the averages. Median values better represent
+                        typical transaction amounts.
+                    </p>
+                </div>
+            </section>
+
+            <!-- BOX 4 -->
+            <section class="panel">
+                <h2>4. Reconstructed Business Rules & Patterns</h2>
+
+                <div class="rule">
+                    <strong>Rule 1 | Sender Classification</strong>
+                    <p>
+                        Transactions are classified according to sender
+                        type: Business (B) or Consumer (C), using
+                        ORDERING_TYPE.
+                    </p>
+                </div>
+
+                <div class="rule">
+                    <strong>Rule 2 | Transaction Value Pattern</strong>
+                    <p>
+                        Business-originated transactions have a higher
+                        median transaction value than Consumer-originated
+                        transactions.
+                    </p>
+                </div>
+
+                <div class="rule">
+                    <strong>Rule 3 | Party-Pair Distribution</strong>
+                    <p>
+                        Transactions are distributed across four
+                        combinations: B→B, B→C, C→B and C→C.
+                        B→C is the most frequent combination.
+                    </p>
+                </div>
+
+                <div class="rule">
+                    <strong>Rule 4 | Amount Distribution</strong>
+                    <p>
+                        High-value observations influence the average
+                        transaction amount. Median values provide a
+                        more representative measure of typical
+                        transaction value.
+                    </p>
+                </div>
+            </section>
+
+            <!-- BOX 5 -->
+            <section class="panel">
+                <h2>5. Executive Analytical Brief</h2>
+
+                <p>
+                    The dataset reveals distinct transaction patterns
+                    between Business and Consumer participants. Business
+                    senders dominate overall transaction volume and
+                    demonstrate substantially higher median transaction
+                    values. Business-to-Consumer (B→C) transfers represent
+                    the largest sender-beneficiary combination.
+                </p>
+
+                <div class="core-insight">
+                    <strong>CORE INSIGHT:</strong>
+                    Business senders account for <b>78.75% of all
+                    transactions</b>, with a median transaction value
+                    <b>7.17 times higher</b> than that of Consumer senders.
+                </div>
+            </section>
+
+            <!-- BOX 6 -->
+            <section class="panel">
+                <h2>6. Business Implications & Recommendations</h2>
+
+                <h3>1. Customer Segmentation</h3>
+                <p>
+                    Develop differentiated payment services for Business
+                    and Consumer segments based on their transaction
+                    volume and typical payment values.
+                </p>
+
+                <h3>2. Transaction Monitoring</h3>
+                <p>
+                    Incorporate sender classification and transaction
+                    characteristics into transaction monitoring to
+                    better understand different payment behaviours.
+                </p>
+
+                <h3>3. Payment Flow Analysis</h3>
+                <p>
+                    Further examine Business-to-Consumer (B→C) transfers,
+                    which account for the largest party-pair category,
+                    to identify their underlying transaction patterns.
+                </p>
+            </section>
+
+        </div>
+
+    </main>
+
+    <!-- FOOTER -->
+    <footer class="footer">
+        <span>UMDAC DATATHON 2026 | SWIFT PAYMENT DATA ANALYSIS</span>
+        <span>FEATURE GROUP 2: PARTY PROFILES & DEMOGRAPHICS</span>
+    </footer>
+
+</div>
+
+</body>
+</html>
