@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -328,4 +329,336 @@
 </div>
 
 </body>
+=======
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>SWIFT — Executive Intelligence Dashboard #1</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary-dark: #0f172a;
+            --mint-primary: #00875a;
+            --mint-dark: #006644;
+            --mint-light: #e6f4ea;
+            --mint-border: #34d399;
+            --bg-page: #f1f5f9;
+            --card-bg: #ffffff;
+            --text-main: #1e293b;
+            --text-muted: #475569;
+            --border: #cbd5e1;
+            --border-light: #e2e8f0;
+        }
+
+        html, body {
+            height: 100vh;
+            margin: 0;
+            padding: 8px;
+            overflow: hidden;
+            background-color: var(--bg-page);
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, Roboto, sans-serif;
+            color: var(--text-main);
+            -webkit-font-smoothing: antialiased;
+        }
+
+        .dashboard-wrapper {
+            width: 98vw;
+            max-width: 1750px;
+            height: 98vh;
+            margin: 0 auto;
+            display: grid;
+            grid-template-rows: auto auto 1fr;
+            gap: 10px;
+            box-sizing: border-box;
+        }
+
+        /* 1. Header with Mint Gradient Color Box */
+        .header-card {
+            background: linear-gradient(135deg, #00875a 0%, #006644 100%);
+            border-radius: 10px;
+            padding: 12px 22px;
+            border: 1px solid #005536;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 4px 12px rgba(0, 135, 90, 0.15);
+        }
+        .header-card h1 { margin: 0; font-size: 19px; font-weight: 800; color: #ffffff; letter-spacing: -0.3px; }
+        .header-card p { margin: 3px 0 0 0; font-size: 11.5px; color: #e2f8ed; text-transform: uppercase; font-weight: 600; letter-spacing: 0.5px; }
+        .badge { background: #ffffff; color: var(--mint-dark); border: 1px solid #a3e635; padding: 6px 14px; border-radius: 6px; font-size: 12px; font-weight: 800; text-transform: uppercase; letter-spacing: 0.5px; box-shadow: 0 2px 4px rgba(0,0,0,0.1); }
+
+        /* 2. Top Metric Cards Row */
+        .metrics-row {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 10px;
+        }
+        .metric-card {
+            background: linear-gradient(135deg, #ffffff 0%, #f0fdf4 100%);
+            padding: 10px 16px;
+            border-radius: 8px;
+            border: 1px solid var(--border);
+            border-left: 5px solid var(--mint-primary);
+            box-shadow: 0 2px 4px rgba(0,0,0,0.02);
+        }
+        .metric-card span {
+            display: block;
+            font-size: 11px;
+            font-weight: 700;
+            color: var(--text-muted);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-bottom: 2px;
+        }
+        .metric-card h3 {
+            margin: 0;
+            font-size: 15px;
+            font-weight: 800;
+            color: var(--primary-dark);
+        }
+
+        /* 3. Main 2-Column Split Grid */
+        .main-grid {
+            display: grid;
+            grid-template-columns: 1fr 1.25fr;
+            gap: 10px;
+            min-height: 0;
+            height: 100%;
+        }
+
+        /* Left Column: Charts Stack */
+        .charts-stack {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            min-height: 0;
+            height: 100%;
+        }
+        .chart-widget {
+            background: linear-gradient(135deg, #ffffff 0%, #f8fafc 100%);
+            border-radius: 8px;
+            padding: 8px;
+            border: 1px solid var(--border);
+            box-shadow: 0 2px 4px rgba(0,0,0,0.02);
+            flex: 1;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 0;
+            overflow: hidden;
+            border-top: 3px solid var(--mint-primary);
+        }
+        .chart-widget img {
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
+        }
+
+        /* Right Column */
+        .right-column {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            min-height: 0;
+            height: 100%;
+        }
+
+        /* Card Boxes */
+        .card-box {
+            background: linear-gradient(135deg, #ffffff 0%, #f4fbf7 100%);
+            border-radius: 8px;
+            border: 1px solid var(--border);
+            box-shadow: 0 2px 4px rgba(0,0,0,0.02);
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+            min-height: 0;
+        }
+        
+        .section-title {
+            background: linear-gradient(135deg, #e6f4ea 0%, #d1fae5 100%);
+            color: var(--mint-dark);
+            padding: 8px 14px;
+            font-size: 12px;
+            font-weight: 800;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            border-bottom: 2px solid var(--mint-border);
+        }
+
+        /* Table Styling */
+        table { width: 100%; border-collapse: collapse; font-size: 13px; }
+        th, td { padding: 7px 12px; border-bottom: 1px solid var(--border-light); text-align: left; }
+        th { color: var(--primary-dark); font-size: 11.5px; text-transform: uppercase; background: #f1f5f9; font-weight: 700; }
+        tr:nth-child(even) { background-color: rgba(240, 253, 244, 0.4); }
+        tr:last-child td { border-bottom: none; }
+
+        /* Full Detailed Insights Styling */
+        .insights-content {
+            padding: 12px 16px;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            overflow-y: auto;
+            flex: 1;
+            min-height: 0;
+            background: linear-gradient(180deg, #ffffff 0%, #f8fafc 100%);
+        }
+        .insight-section h4 {
+            margin: 0 0 3px 0;
+            color: var(--mint-primary);
+            font-size: 13px;
+            text-transform: uppercase;
+            font-weight: 800;
+            letter-spacing: 0.3px;
+        }
+        .insight-section p {
+            margin: 0 0 4px 0;
+            color: var(--text-main);
+            font-size: 13px;
+            line-height: 1.45;
+        }
+        .insight-section ul {
+            margin: 3px 0 0 16px;
+            padding: 0;
+            color: var(--text-main);
+            font-size: 13px;
+            line-height: 1.4;
+        }
+        .insight-section li {
+            margin-bottom: 3px;
+        }
+    </style>
+</head>
+<body>
+
+<div class="dashboard-wrapper">
+    <!-- 1. Header with Gradient Color Box -->
+    <div class="header-card">
+        <div>
+            <h1>SWIFT Datathon 2026 — Executive Intelligence Portal</h1>
+            <p>Routing Architecture Dynamics: Quantifying Compounding Latency Across Intermediary Corridors</p>
+        </div>
+        <div class="badge">Dashboard #1</div>
+    </div>
+
+    <!-- 2. Top Metric Cards Row -->
+    <div class="metrics-row">
+        <div class="metric-card">
+            <span>Primary Liquidity Corridor</span>
+            <h3>Nodes 2–3 (6M+ Volume)</h3>
+        </div>
+        <div class="metric-card">
+            <span>Latency Scaling Trend</span>
+            <h3>Exponential Compounding Growth</h3>
+        </div>
+        <div class="metric-card">
+            <span>Volume-Duration Tradeoff</span>
+            <h3>Inverse Correlation</h3>
+        </div>
+        <div class="metric-card">
+            <span>Data Integrity Flag</span>
+            <h3>Sparse Tail Anomaly (Nodes 13–14)</h3>
+        </div>
+    </div>
+
+    <!-- 3. Main 2-Column Split Grid -->
+    <div class="main-grid">
+        
+        <!-- Left: Large Charts Stack -->
+        <div class="charts-stack">
+            <div class="chart-widget">
+                <img src="dashboard_routing_styled.png" alt="Routing Duration Chart">
+            </div>
+            <div class="chart-widget">
+                <img src="dashboard_distribution_styled.png" alt="Transaction Volume Density Chart">
+            </div>
+        </div>
+
+        <!-- Right: Compact Table & Expanded Economic Brief -->
+        <div class="right-column">
+            
+            <!-- Performance Matrix Table -->
+            <div class="card-box" style="flex: 0.65;">
+                <div class="section-title">Routing Node Performance Matrix & Operational Friction</div>
+                <div style="overflow-y: auto;">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Participant Count</th>
+                                <th>Routing Classification</th>
+                                <th>Sample Density</th>
+                                <th>Latency Impact</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td><strong>2 – 3 Nodes</strong></td>
+                                <td>Direct Bilateral Correspondent Corridor</td>
+                                <td>High (N &gt; 5M)</td>
+                                <td>Optimal speed; minimal handoff friction.</td>
+                            </tr>
+                            <tr>
+                                <td><strong>4 – 8 Nodes</strong></td>
+                                <td>Standard Multi-Hop Intermediary Chain</td>
+                                <td>Moderate (N &gt; 10k)</td>
+                                <td>Linear duration scaling due to compliance checks.</td>
+                            </tr>
+                            <tr>
+                                <td><strong>9 – 14 Nodes</strong></td>
+                                <td>Complex Multi-Tiered / Sparse Tail</td>
+                                <td>Low (N &lt; 300)</td>
+                                <td>Heightened queuing delays and survivorship bias.</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- Comprehensive Executive Analytical Brief -->
+            <div class="card-box" style="flex: 1.65;">
+                <div class="section-title">Executive Analytical Brief & Strategic Business Rules</div>
+                <div class="insights-content">
+                    <div class="insight-section">
+                        <h4>🎯 1. Core Economic Finding & The Inverse Volume-Duration Tradeoff</h4>
+                        <p>Cross-referencing transaction volume density against routing path length uncovers a powerful inverse relationship across the global payment network:</p>
+                        <ul>
+                            <li><strong>High Liquidity / Low Latency (Nodes 2–3):</strong> Over 90% of all institutional volume flows through direct bilateral corridors, boasting the fastest settlement times with minimal intermediary handoffs.</li>
+                            <li><strong>Low Liquidity / High Latency (Nodes 8+):</strong> As paths extend beyond 8 hops, volume drops off exponentially while settlement duration compounds dramatically.</li>
+                        </ul>
+                    </div>
+
+                    <div class="insight-section">
+                        <h4>🏛️ 2. Nostro/Vostro Ledger Mechanics & Intermediary Friction</h4>
+                        <p>Systematic upward scaling of settlement duration per added node is driven by foundational institutional constraints:</p>
+                        <ul>
+                            <li><strong>Reciprocal Account Overhead:</strong> Each intermediary bank requires independent posting across bilateral nostro/vostro accounts, creating multi-currency reconciliation lag.</li>
+                            <li><strong>Sequential AML Screening:</strong> Anti-Money Laundering (AML) and sanctions checks execute in series at each hop. A manual review at a single node stalls the entire chain.</li>
+                            <li><strong>Cross-Jurisdictional Time Zones:</strong> Multi-tiered paths span disparate regions, forcing payment instructions into overnight batch-clearing queues.</li>
+                        </ul>
+                    </div>
+
+                    <div class="insight-section">
+                        <h4>⚠️ 3. The Survivorship Bias & Sparse Tail Anomaly (Nodes 13–14)</h4>
+                        <p>In the tail end of the routing distribution, volume drops to near zero ($N < 10$), yet mean duration exhibits an unexpected structural flattening. This is a textbook manifestation of <strong>survivorship bias</strong>: payments through 13–14 intermediaries normally time out or fail compliance, meaning the few survivors are elite, pre-cleared institutional test loops.</p>
+                    </div>
+
+                    <div class="insight-section">
+                        <h4>🚀 4. Strategic Business Recommendations for SWIFT</h4>
+                        <ul>
+                            <li><strong>Direct Multi-Currency Corridor Hubs:</strong> Establish bilateral liquidity pools to eliminate currency-bridging intermediary hops, slashing participant counts from 6–8 nodes down to the optimal 2–3 node baseline while freeing trapped nostro capital.</li>
+                            <li><strong>SWIFT gpi Smart Pre-Validation:</strong> Equip routing engines with predictive algorithms to automatically block multi-hop pathways exceeding 4 nodes and reroute transactions through direct correspondent ties.</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+
+    </div>
+</div>
+
+</body>
+>>>>>>> a003ecf0d3c204cbfee17ffa9da1ef0f64ff4157
 </html>
