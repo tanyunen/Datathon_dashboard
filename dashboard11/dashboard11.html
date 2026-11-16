@@ -1,0 +1,740 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Dashboard 11 - Transaction Traffic Over Time</title>
+
+<style>
+
+* {
+    box-sizing: border-box;
+}
+
+html, body {
+    width: 100%;
+    height: 100%;
+    margin: 0;
+    overflow: hidden;
+}
+
+body {
+    padding: 10px 14px;
+    background: #f1f5f2;
+    font-family: Arial, Helvetica, sans-serif;
+    color: #153f32;
+}
+
+.dashboard {
+    width: 100%;
+    height: calc(100vh - 20px);
+    max-width: 1900px;
+    margin: auto;
+
+    display: grid;
+    grid-template-rows: 62px 70px minmax(0, 1fr) 16px;
+    gap: 9px;
+}
+
+/* HEADER */
+
+.header {
+    background: linear-gradient(110deg, #104b38, #087a50);
+    color: white;
+    border-radius: 9px;
+    padding: 0 22px;
+
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.header h1 {
+    font-size: 21px;
+    margin: 0 0 4px 0;
+}
+
+.header p {
+    font-size: 10px;
+    margin: 0;
+    letter-spacing: 0.4px;
+}
+
+.header-tag {
+    background: white;
+    color: #087a50;
+    padding: 9px 15px;
+    border-radius: 6px;
+    font-size: 11px;
+    font-weight: bold;
+}
+
+/* KPI CARDS */
+
+.kpis {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 10px;
+}
+
+.kpi {
+    background: white;
+    border: 1px solid #dce7e0;
+    border-left: 5px solid #168052;
+    border-radius: 8px;
+    padding: 7px 13px;
+
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+
+.kpi-label {
+    font-size: 10px;
+    color: #607b70;
+    font-weight: bold;
+    margin-bottom: 3px;
+}
+
+.kpi-value {
+    font-size: 21px;
+    font-weight: bold;
+    color: #07583e;
+}
+
+.kpi-note {
+    font-size: 9px;
+    color: #526b61;
+    margin-top: 2px;
+}
+
+/* MAIN LAYOUT */
+
+.main {
+    min-height: 0;
+    display: grid;
+    grid-template-columns: 0.95fr 1.15fr;
+    gap: 12px;
+}
+
+/* LEFT COLUMN */
+
+.left-column {
+    min-height: 0;
+    display: grid;
+    grid-template-rows: minmax(0, 1fr) 190px;
+    gap: 9px;
+}
+
+.chart-panel {
+    background: white;
+    border: 1px solid #cfded5;
+    border-top: 3px solid #07845b;
+    border-radius: 8px;
+    padding: 5px 8px 3px;
+    min-height: 0;
+    overflow: hidden;
+}
+
+.chart-panel img {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+    object-position: center top;
+}
+
+/* INFORMATION PANELS */
+
+.info-panel {
+    background: white;
+    border: 1px solid #cfded5;
+    border-radius: 8px;
+    overflow: hidden;
+    min-height: 0;
+    display: flex;
+    flex-direction: column;
+}
+
+.panel-heading {
+    background: #d9f3e6;
+    border-bottom: 2px solid #0a9b67;
+    color: #087a50;
+    font-weight: bold;
+    font-size: 12px;
+    padding: 9px 13px;
+    flex-shrink: 0;
+}
+
+.panel-content {
+    padding: 9px 12px;
+    min-height: 0;
+    overflow: hidden;
+    font-size: 10px;
+    line-height: 1.32;
+    color: #243b32;
+}
+
+/* TEMPORAL TABLE */
+
+.temporal-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 10px;
+}
+
+.temporal-table th {
+    background: #edf5f0;
+    color: #104b38;
+    text-align: left;
+    padding: 6px 8px;
+}
+
+.temporal-table td {
+    padding: 6px 8px;
+    border-bottom: 1px solid #e1e9e3;
+}
+
+.temporal-table tr:last-child td {
+    border-bottom: none;
+}
+
+/* RIGHT COLUMN */
+
+.right-column {
+    min-height: 0;
+}
+
+.brief-panel {
+    height: 100%;
+    background: white;
+    border: 1px solid #cfded5;
+    border-radius: 8px;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+}
+
+.brief-content {
+    padding: 10px;
+    flex: 1;
+    min-height: 0;
+    overflow: hidden;
+}
+
+.brief-grid {
+    height: 100%;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    grid-template-rows: 1fr 1fr auto;
+    gap: 9px;
+}
+
+.brief-section {
+    min-width: 0;
+    overflow: hidden;
+    border-left: 3px solid #159568;
+    background: #f7faf8;
+    padding: 9px 11px;
+    border-radius: 3px;
+}
+
+.brief-section h3 {
+    color: #07845b;
+    font-size: 12px;
+    margin: 0 0 6px 0;
+}
+
+.brief-section p {
+    font-size: 10px;
+    line-height: 1.4;
+    margin: 4px 0;
+}
+
+.brief-section ul {
+    margin: 5px 0 0 0;
+    padding-left: 16px;
+    font-size: 10px;
+    line-height: 1.4;
+}
+
+.brief-section li {
+    margin-bottom: 5px;
+}
+
+.conclusion {
+    grid-column: 1 / 3;
+    border-left: 3px solid #d5a72d;
+    background: #fffaf0;
+    padding: 8px 11px;
+    border-radius: 3px;
+    overflow: hidden;
+}
+
+.conclusion h3 {
+    color: #936c13;
+    font-size: 12px;
+    margin: 0 0 4px 0;
+}
+
+.conclusion p {
+    font-size: 10px;
+    line-height: 1.4;
+    margin: 3px 0;
+}
+
+.small-note {
+    color: #71877d;
+    font-size: 8px;
+    font-style: italic;
+}
+
+/* FOOTER */
+
+.footer {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 8px;
+    color: #71877d;
+    padding: 0 4px;
+}
+
+/* SMALLER SCREENS */
+
+@media (max-width: 1100px) {
+
+    html, body {
+        height: auto;
+        overflow: auto;
+    }
+
+    .dashboard {
+        height: auto;
+        display: flex;
+        flex-direction: column;
+    }
+
+    .header {
+        min-height: 70px;
+    }
+
+    .kpis {
+        grid-template-columns: repeat(2, 1fr);
+    }
+
+    .main {
+        display: flex;
+        flex-direction: column;
+    }
+
+    .left-column {
+        display: flex;
+        flex-direction: column;
+    }
+
+    .chart-panel {
+        height: 550px;
+    }
+
+    .left-column .info-panel {
+        min-height: 145px;
+    }
+
+    .brief-panel {
+        min-height: 650px;
+    }
+
+    .brief-content {
+        overflow: visible;
+    }
+
+    .brief-grid {
+        display: flex;
+        flex-direction: column;
+    }
+
+    .brief-section,
+    .conclusion {
+        overflow: visible;
+    }
+
+    .footer {
+        min-height: 25px;
+    }
+}
+
+</style>
+</head>
+
+<body>
+
+<div class="dashboard">
+
+    <!-- HEADER -->
+
+    <header class="header">
+
+        <div>
+            <h1>SWIFT DATATHON 2026 — TRANSACTION TRAFFIC OVER TIME</h1>
+            <p>
+                TEMPORAL PATTERNS: IDENTIFYING TRANSACTION PEAKS,
+                DAILY DISTRIBUTION AND TIME-BASED BEHAVIOUR
+            </p>
+        </div>
+
+        <div class="header-tag">
+            DASHBOARD #11
+        </div>
+
+    </header>
+
+
+    <!-- KPI CARDS -->
+
+    <section class="kpis">
+
+        <div class="kpi">
+            <div class="kpi-label">TOTAL TRANSACTIONS</div>
+            <div class="kpi-value">10,000,000</div>
+            <div class="kpi-note">Valid-timestamp transactions processed</div>
+        </div>
+
+        <div class="kpi">
+            <div class="kpi-label">BUSIEST HOUR</div>
+            <div class="kpi-value">23:00</div>
+            <div class="kpi-note">
+                585,888 transactions | Malaysia time
+            </div>
+        </div>
+
+        <div class="kpi">
+            <div class="kpi-label">BUSIEST DAY</div>
+            <div class="kpi-value">Friday</div>
+            <div class="kpi-note">1,862,981 transactions</div>
+        </div>
+
+        <div class="kpi">
+            <div class="kpi-label">PEAK-HOUR TRANSACTION SHARE</div>
+            <div class="kpi-value">32.77%</div>
+            <div class="kpi-note">Six busiest hours combined</div>
+        </div>
+
+    </section>
+
+
+    <!-- MAIN DASHBOARD -->
+
+    <main class="main">
+
+        <!-- LEFT COLUMN: CHARTS + TABLE -->
+
+        <section class="left-column">
+
+            <div class="chart-panel">
+
+                <img
+                    src="dashboard11_temporal/dashboard11_charts.png"
+                    alt="Four charts showing transaction traffic over time"
+                >
+
+            </div>
+
+
+            <!-- TEMPORAL DISTRIBUTION TABLE -->
+
+            <div class="info-panel">
+
+                <div class="panel-heading">
+                    TEMPORAL PATTERN &amp; TRANSACTION DISTRIBUTION
+                </div>
+
+                <div class="panel-content">
+
+                    <table class="temporal-table">
+
+                        <tr>
+                            <th>INDICATOR</th>
+                            <th>OBSERVED RESULT</th>
+                            <th>INTERPRETATION</th>
+                        </tr>
+
+                        <tr>
+                            <td>Peak hour</td>
+                            <td><b>23:00</b></td>
+                            <td>Highest hourly activity</td>
+                        </tr>
+
+                        <tr>
+                            <td>Quietest hour</td>
+                            <td><b>11:00</b></td>
+                            <td>Lowest hourly activity</td>
+                        </tr>
+
+                        <tr>
+                            <td>Busiest day</td>
+                            <td><b>Friday</b></td>
+                            <td>Highest weekly volume</td>
+                        </tr>
+
+                        <tr>
+                            <td>Weekend share</td>
+                            <td><b>14.72%</b></td>
+                            <td>Saturday and Sunday combined</td>
+                        </tr>
+
+                        <tr>
+                            <td>Peak-hour share</td>
+                            <td><b>32.77%</b></td>
+                            <td>Six busiest hours combined</td>
+                        </tr>
+
+                    </table>
+
+                </div>
+
+            </div>
+
+        </section>
+
+
+        <!-- RIGHT COLUMN: EXECUTIVE ANALYTICAL BRIEF -->
+
+        <section class="right-column">
+
+            <div class="brief-panel">
+
+                <div class="panel-heading">
+                    EXECUTIVE ANALYTICAL BRIEF &amp; RECONSTRUCTED BUSINESS RULES
+                </div>
+
+                <div class="brief-content">
+
+                    <div class="brief-grid">
+
+
+                        <!-- SECTION 1 -->
+
+                        <div class="brief-section">
+
+                            <h3>1. KEY TEMPORAL FINDINGS</h3>
+
+                            <p>
+                                Analysis of 10,000,000 transactions
+                                reveals a non-uniform distribution across
+                                hours and days.
+                            </p>
+
+                            <ul>
+
+                                <li>
+                                    <b>Hourly concentration:</b>
+                                    23:00 is the busiest hour
+                                    (585,888), while
+                                    11:00 is the quietest
+                                    (218,010).
+                                </li>
+
+                                <li>
+                                    <b>Daily concentration:</b>
+                                    Friday has the highest volume
+                                    (1,862,981), while
+                                    Sunday has the lowest
+                                    (552,588).
+                                </li>
+
+                                <li>
+                                    <b>Peak-hour share:</b>
+                                    The six busiest hours (00:00, 01:00, 02:00, 20:00, 21:00, 23:00)
+                                    account for 32.77% of
+                                    transactions.
+                                </li>
+
+                                <li>
+                                    <b>Weekend activity:</b>
+                                    Saturday and Sunday account for
+                                    14.72% of total volume.
+                                </li>
+
+                            </ul>
+
+                        </div>
+
+
+                        <!-- SECTION 2 -->
+
+                        <div class="brief-section">
+
+                            <h3>2. RECONSTRUCTED TEMPORAL PATTERNS</h3>
+
+                            <p>
+                                The timestamp distribution suggests that
+                                transaction generation is not evenly
+                                distributed across the day or week.
+                            </p>
+
+                            <ul>
+
+                                <li>
+                                    <b>Hourly pattern:</b>
+                                    Transaction counts vary across the
+                                    24-hour period, suggesting non-uniform
+                                    hourly timestamp sampling.
+                                </li>
+
+                                <li>
+                                    <b>Weekday pattern:</b>
+                                    Transaction volumes differ between
+                                    weekdays and weekends, suggesting
+                                    day-related variation.
+                                </li>
+
+                                <li>
+                                    <b>Transaction value:</b>
+                                    The highest hourly average occurs at
+                                    09:00
+                                    (USD 159,855.58).
+                                    This is an association, not proof of causation.
+                                </li>
+
+                            </ul>
+
+                            <p class="small-note">
+                                These are reconstructed patterns from observed
+                                distributions, not confirmed source-code rules.
+                            </p>
+
+                        </div>
+
+
+                        <!-- SECTION 3 -->
+
+                        <div class="brief-section">
+
+                            <h3>3. DATASET GENERATION IMPLICATIONS</h3>
+
+                            <p>
+                                The observed temporal patterns provide
+                                clues about how the synthetic dataset
+                                may have been constructed.
+                            </p>
+
+                            <ul>
+
+                                <li>
+                                    The timestamp generator may use weighted
+                                    hourly sampling instead of uniform sampling.
+                                </li>
+
+                                <li>
+                                    Different weekday and weekend distributions
+                                    may be incorporated into timestamp generation.
+                                </li>
+
+                                <li>
+                                    Further analysis should compare time patterns
+                                    with transaction type, currency, participant
+                                    type and anomaly category.
+                                </li>
+
+                            </ul>
+
+                            <p>
+                                The overall anomaly-labelled record rate is
+                                <b>0.07%</b>.
+                                This describes records with a non-empty
+                                anomaly label under this analysis definition;
+                                it does not establish actual fraud.
+                            </p>
+
+                        </div>
+
+
+                        <!-- SECTION 4 -->
+
+                        <div class="brief-section">
+
+                            <h3>4. BUSINESS IMPLICATIONS &amp; RECOMMENDATIONS</h3>
+
+                            <ul>
+
+                                <li>
+                                    <b>Payment-processing capacity:</b>
+                                    Use peak periods to guide capacity planning
+                                    and resource allocation.
+                                </li>
+
+                                <li>
+                                    <b>Operational monitoring:</b>
+                                    Monitor transaction queues and processing
+                                    performance during high-volume periods.
+                                </li>
+
+                                <li>
+                                    <b>Time-aware monitoring:</b>
+                                    Consider normal hourly and weekday patterns
+                                    when evaluating unusual changes in volume.
+                                </li>
+
+                                <li>
+                                    <b>Further analysis:</b>
+                                    Compare Business and Consumer transaction
+                                    patterns across hours and weekdays.
+                                </li>
+
+                            </ul>
+
+                        </div>
+
+
+                        <!-- SECTION 5: CONCLUSION -->
+
+                        <div class="conclusion">
+
+                            <h3>5. OVERALL CONCLUSION</h3>
+
+                            <p>
+                                Transaction traffic in the synthetic dataset
+                                is temporally uneven. Hourly and weekday
+                                patterns provide evidence for reconstructing
+                                possible timestamp-generation logic and can
+                                support operational planning.
+                            </p>
+
+                            <p class="small-note">
+                                Limitation: The dataset is synthetic and fictitious.
+                                These patterns should not be interpreted as actual
+                                global SWIFT payment behaviour.
+                            </p>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </section>
+
+    </main>
+
+
+    <!-- FOOTER -->
+
+    <footer class="footer">
+
+        <span>
+            UMDAC DATATHON 2026 | SYNTHETIC SWIFT PAYMENT DATA
+        </span>
+
+        <span>
+            TIMEZONE: ASIA/KUALA_LUMPUR (UTC+8) | 30 Apr 2023 – 31 Jul 2023
+        </span>
+
+    </footer>
+
+</div>
+
+</body>
+</html>
