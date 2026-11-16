@@ -263,9 +263,9 @@
                     <table>
                         <thead>
                             <tr>
-                                <th>Corridor / Path Lane</th>
+                                <th>Path Lane</th>
                                 <th>Routing Classification</th>
-                                <th>Volume Share</th>
+                                <th>Volume</th>
                                 <th>Capital Drag Impact</th>
                             </tr>
                         </thead>
@@ -299,7 +299,7 @@
                 <div class="insights-content">
                     <div class="insight-section">
                         <h4>🌐 1. Macro Corridor Topology & Intermediary Concentration</h4>
-                        <p>Mapping transaction flows across global correspondence corridors reveals heavy structural dependence on multi-hop intermediary nodes (BIC8 paths):</p>
+                        <p>Heavy reliance on multi-hop intermediary nodes (BIC8 paths) creates structural bottlenecks</p>
                         <ul>
                             <li><strong>Hub-and-Spoke Bottlenecks:</strong> High-volume corridors like APAC-to-Europe experience heavy congestion because payments must pass through legacy mega-correspondent clearing hubs.</li>
                             <li><strong>Intermediary Proliferation:</strong> Each additional participant node compounds reconciliation friction across independent regional ledgers.</li>
@@ -311,7 +311,7 @@
                         <p>Multiplying transaction amounts by multi-hop transit duration uncovers an exponential penalty curve:</p>
                         <ul>
                             <li><strong>Nostro Account Paralysis:</strong> Multi-hop chains (4+ hops) trap billions in idle liquidity across intermediary nostro/vostro accounts.</li>
-                            <li><strong>Velocity Drag Coefficient:</strong> Capital velocity drops sharply as routing length scales, disproportionately impacting corporate treasury flows.</li>
+                            <li><strong>Velocity Drag Coefficient:</strong> Capital velocity drops sharply as routing length scales, impacting corporate treasury flows.</li>
                         </ul>
                     </div>
 
@@ -325,8 +325,8 @@
                     <div class="insight-section">
                         <h4>🚀 4. Strategic Recommendations for Corridor Optimization</h4>
                         <ul>
-                            <li><strong>Dynamic Corridor Rerouting:</strong> Implement automated APIs to reroute high-risk corporate and cover payments through direct bilateral rails when intermediary congestion spikes.</li>
-                            <li><strong>Consolidated Liquidity Pools:</strong> Deploy multi-currency liquidity hubs to eliminate currency-bridging intermediary hops and free trapped capital.</li>
+                            <li><strong>Dynamic Corridor Rerouting & Intermediary Bypass:</strong> Evaluate <code>BIC8_PATH</code> hop counts prior to dispatch, automatically bypassing congested traditional clearing hubs and steering payments through optimized 1- or 2-hop bilateral corridors.</li>
+                            <li><strong>Predictive Liquidity Buffer Allocation:</strong> Utilize multi-hop duration modeling to dynamically allocate pre-funded capital across high-friction lanes (like APAC ↔ Europe), preventing institutional cash-flow gridlock during peak timezone handoff windows.</li>
                         </ul>
                     </div>
                 </div>

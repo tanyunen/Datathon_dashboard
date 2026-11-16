@@ -1,0 +1,404 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>SWIFT — Executive Intelligence Dashboard #9</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary-dark: #0f172a;
+            --mint-primary: #00875a;
+            --mint-dark: #006644;
+            --mint-light: #e6f4ea;
+            --mint-border: #34d399;
+            --bg-page: #f1f5f9;
+            --card-bg: #ffffff;
+            --text-main: #1e293b;
+            --text-muted: #475569;
+            --border: #cbd5e1;
+            --border-light: #e2e8f0;
+        }
+
+        html, body {
+            height: 100vh;
+            margin: 0;
+            padding: 4px;
+            overflow: hidden;
+            background-color: var(--bg-page);
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, Roboto, sans-serif;
+            color: var(--text-main);
+            -webkit-font-smoothing: antialiased;
+        }
+
+        .dashboard-wrapper {
+            width: 99vw;
+            max-width: 1750px;
+            height: 98vh;
+            margin: 0 auto;
+            display: grid;
+            grid-template-rows: auto auto 1fr;
+            gap: 5px;
+            box-sizing: border-box;
+        }
+
+        /* 1. Header */
+        .header-card {
+            background: linear-gradient(135deg, #00875a 0%, #006644 100%);
+            border-radius: 6px;
+            padding: 5px 14px;
+            border: 1px solid #005536;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 2px 8px rgba(0, 135, 90, 0.15);
+        }
+        .header-card h1 { margin: 0; font-size: 15px; font-weight: 800; color: #ffffff; letter-spacing: -0.3px; }
+        .header-card p { margin: 1px 0 0 0; font-size: 9.5px; color: #e2f8ed; text-transform: uppercase; font-weight: 600; letter-spacing: 0.5px; }
+        .badge { background: #ffffff; color: var(--mint-dark); border: 1px solid #a3e635; padding: 3px 8px; border-radius: 4px; font-size: 10px; font-weight: 800; text-transform: uppercase; letter-spacing: 0.5px; }
+
+        /* 2. Top Metric Cards Row */
+        .metrics-row {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 5px;
+        }
+        .metric-card {
+            background: linear-gradient(135deg, #ffffff 0%, #f0fdf4 100%);
+            padding: 4px 10px;
+            border-radius: 5px;
+            border: 1px solid var(--border);
+            border-left: 4px solid var(--mint-primary);
+            box-shadow: 0 1px 2px rgba(0,0,0,0.02);
+        }
+        .metric-card span {
+            display: block;
+            font-size: 9px;
+            font-weight: 700;
+            color: var(--text-muted);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-bottom: 1px;
+        }
+        .metric-card h3 {
+            margin: 0;
+            font-size: 12px;
+            font-weight: 800;
+            color: var(--primary-dark);
+        }
+
+        /* 3. Main 2-Column Split Grid */
+        .main-grid {
+            display: grid;
+            grid-template-columns: 1fr 1.25fr;
+            gap: 5px;
+            min-height: 0;
+            height: 100%;
+        }
+
+        /* Left Column: Charts Stack */
+        .charts-stack {
+            display: flex;
+            flex-direction: column;
+            gap: 5px;
+            min-height: 0;
+            height: 100%;
+        }
+        .chart-widget {
+            background: linear-gradient(135deg, #ffffff 0%, #f8fafc 100%);
+            border-radius: 5px;
+            padding: 3px;
+            border: 1px solid var(--border);
+            box-shadow: 0 1px 2px rgba(0,0,0,0.02);
+            flex: 1;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 0;
+            overflow: hidden;
+            border-top: 3px solid var(--mint-primary);
+        }
+        .chart-widget img {
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
+        }
+
+        /* Right Column (Split into 3 Balanced Boxes) */
+        .right-column {
+            display: flex;
+            flex-direction: column;
+            gap: 5px;
+            min-height: 0;
+            height: 100%;
+        }
+
+        /* Card Boxes */
+        .card-box {
+            background: linear-gradient(135deg, #ffffff 0%, #f4fbf7 100%);
+            border-radius: 5px;
+            border: 1px solid var(--border);
+            box-shadow: 0 1px 2px rgba(0,0,0,0.02);
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+            min-height: 0;
+        }
+        
+        .section-title {
+            background: linear-gradient(135deg, #e6f4ea 0%, #d1fae5 100%);
+            color: var(--mint-dark);
+            padding: 4px 8px;
+            font-size: 10px;
+            font-weight: 800;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            border-bottom: 2px solid var(--mint-border);
+        }
+
+        /* Table Styling */
+        table { width: 100%; border-collapse: collapse; font-size: 9.5px; }
+        th, td { padding: 2px 5px; border-bottom: 1px solid var(--border-light); text-align: left; }
+        th { color: var(--primary-dark); font-size: 8.5px; text-transform: uppercase; background: #f1f5f9; font-weight: 700; }
+        tr:nth-child(even) { background-color: rgba(240, 253, 244, 0.4); }
+        tr:last-child td { border-bottom: none; }
+
+        /* Insights & Brief Styling */
+        .insights-content {
+            padding: 4px 8px;
+            display: flex;
+            flex-direction: column;
+            gap: 2px;
+            overflow-y: hidden;
+            flex: 1;
+            min-height: 0;
+            background: linear-gradient(180deg, #ffffff 0%, #f8fafc 100%);
+        }
+        .insight-section h4 {
+            margin: 0 0 1px 0;
+            color: var(--mint-primary);
+            font-size: 9px;
+            text-transform: uppercase;
+            font-weight: 800;
+        }
+        .insight-section p {
+            margin: 0 0 1px 0;
+            color: var(--text-main);
+            font-size: 9px;
+            line-height: 1.1;
+        }
+        .insight-section ul {
+            margin: 0 0 0 12px;
+            padding: 0;
+            font-size: 9px;
+            line-height: 1.05;
+        }
+        .rule-callout {
+            background: #f0fdf4;
+            border-left: 2px solid var(--mint-primary);
+            padding: 2px 5px;
+            margin: 1px 0;
+            border-radius: 0 3px 3px 0;
+            font-size: 8.5px;
+            color: #166534;
+        }
+
+        /* Telemetry Grid */
+        .telemetry-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 4px;
+            padding: 5px 8px;
+            background: linear-gradient(180deg, #ffffff 0%, #f8fafc 100%);
+            flex: 1;
+            align-items: center;
+        }
+        .telemetry-item {
+            background: #f0fdf4;
+            border: 1px solid #a7f3d0;
+            border-radius: 4px;
+            padding: 3px 6px;
+            text-align: center;
+        }
+        .telemetry-item span {
+            display: block;
+            font-size: 8px;
+            font-weight: 700;
+            color: var(--text-muted);
+            text-transform: uppercase;
+        }
+        .telemetry-item h5 {
+            margin: 1px 0 0 0;
+            font-size: 10.5px;
+            font-weight: 800;
+            color: var(--mint-dark);
+        }
+
+        .badge-teal { background: #ccfbf1; color: #0f766e; padding: 1px 4px; border-radius: 3px; font-weight: 700; font-size: 8px; }
+        .badge-sky { background: #e0f2fe; color: #0369a1; padding: 1px 4px; border-radius: 3px; font-weight: 700; font-size: 8px; }
+    </style>
+</head>
+<body>
+
+<div class="dashboard-wrapper">
+    <!-- 1. Header -->
+    <div class="header-card">
+        <div>
+            <h1>SWIFT Datathon 2026 — Executive Intelligence Portal</h1>
+            <p>Fat Finger Error Magnitude & Currency Precision Skew: Operational Stress & Capital Variance</p>
+        </div>
+        <div class="badge">Dashboard #9</div>
+    </div>
+
+    <!-- 2. Top Metric Cards Row -->
+    <div class="metrics-row">
+        <div class="metric-card">
+            <span>High-Risk Currency Vector</span>
+            <h3>JPY Zero-Decimal & USD/MYR</h3>
+        </div>
+        <div class="metric-card">
+            <span>Peak Stress Window</span>
+            <h3>End-of-Day Batch (17:00 - 20:00)</h3>
+        </div>
+        <div class="metric-card">
+            <span>Pre-Posting Interception</span>
+            <h3>84.2% Auto-Blocked</h3>
+        </div>
+        <div class="metric-card">
+            <span>Cumulative Variance</span>
+            <h3>$228.8M Total Skew Exposure</h3>
+        </div>
+    </div>
+
+    <!-- 3. Main 2-Column Split Grid -->
+    <div class="main-grid">
+        
+        <!-- Left: Charts Stack -->
+        <div class="charts-stack">
+            <div class="chart-widget">
+                <img src="dashboard9_chart1_magnitude.png" alt="Currency Decimal Skew Comparative Chart">
+            </div>
+            <div class="chart-widget">
+                <img src="dashboard9_chart2_stress.png" alt="Mint Gradient Operational Stress Chart">
+            </div>
+        </div>
+
+        <!-- Right: 3 Balanced Boxes with Table, Brief (including Fatigue & 4 Recommendations), and Telemetry -->
+        <div class="right-column">
+            
+            <!-- Box 1: Performance Matrix Table -->
+            <div class="card-box" style="flex: 0.75;">
+                <div class="section-title">Currency Precision Skew & Operational Stress Taxonomy</div>
+                <div style="overflow-y: auto;">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Currency / Error Subtype</th>
+                                <th>ISO 4217 Precision</th>
+                                <th>Capital Skew Impact</th>
+                                <th>Interception Status</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td><strong>JPY Zero-Decimal Traps</strong></td>
+                                <td>0-Decimal (Integer)</td>
+                                <td>Critical ($62.4M)</td>
+                                <td><span class="badge-teal">Pre-Posting Blocked</span></td>
+                            </tr>
+                            <tr>
+                                <td><strong>2-Digit Right Shift (USD)</strong></td>
+                                <td>2-Decimal Standard</td>
+                                <td>Critical ($54.2M)</td>
+                                <td><span class="badge-teal">Pre-Posting Blocked</span></td>
+                            </tr>
+                            <tr>
+                                <td><strong>USD/MYR Emerging Corridor</strong></td>
+                                <td>2-Decimal Corridor</td>
+                                <td>High ($45.6M)</td>
+                                <td><span class="badge-sky">Manual Reversal</span></td>
+                            </tr>
+                            <tr>
+                                <td><strong>KWD 3-Decimal Error</strong></td>
+                                <td>3-Decimal Precision</td>
+                                <td>Moderate ($38.1M)</td>
+                                <td><span class="badge-teal">Pre-Posting Blocked</span></td>
+                            </tr>
+                            <tr>
+                                <td><strong>Trailing Zero Omission</strong></td>
+                                <td>Fractional Skew</td>
+                                <td>Moderate ($28.5M)</td>
+                                <td><span class="badge-sky">Manual Reversal</span></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- Box 2: Executive Brief with Fatigue Point & 4 Recommendations -->
+            <div class="card-box" style="flex: 1.35;">
+                <div class="section-title">Executive Analytical Brief & Strategic Business Rules</div>
+                <div class="insights-content">
+                    <div class="insight-section">
+                        <h4>💱 1. ISO 4217 PRECISION & NOSTRO IMPACT</h4>
+                        <p>Zero-decimal currencies (JPY) suffer 100x capital skews when operators append decimal cents into <strong>Tag 32A/33B</strong>, draining Nostro accounts.</p>
+                    </div>
+                    <div class="insight-section">
+                        <h4>⏰ 2. OPERATOR FATIGUE & END-OF-DAY STRESS WINDOWS</h4>
+                        <p>Error rates surge exponentially during batch clearing (17:00–20:00), driven by pre-cutoff time pressure, high transaction velocity, and operator cognitive exhaustion.</p>
+                    </div>
+                    <div class="insight-section">
+                        <h4>⚡ 3. CORE BUSINESS RULE: DYNAMIC RANGE & CURRENCY VALIDATION (DRCV)</h4>
+                        <div class="rule-callout">
+                            <strong>Rule:</strong> If an MT103 transaction violates ISO 4217 rules or deviates >25% from corridor averages, the gateway quarantines the payload.
+                        </div>
+                    </div>
+                    <div class="insight-section">
+                        <h4>🚀 4. STRATEGIC BUSINESS RECOMMENDATIONS & SYSTEM RESILIENCE</h4>
+                        <ul>
+                            <li><strong>Currency-Aware Boundaries:</strong> Enforce strict hard ceilings tailored to specific ISO 4217 currency subdivisions.</li>
+                            <li><strong>Emerging Corridor Verification:</strong> Implement mandatory dual-approval workflows for high-value transfers across restricted liquidity corridors (USD/MYR).</li>
+                            <li><strong>Automated Pre-Posting Interception:</strong> Deploy AI-driven boundary checks during peak batch windows to block anomalous payloads pre-ledger.</li>
+                            <li><strong>Real-Time Operator Alerting:</strong> Trigger instant UI warning prompts when transaction amounts exceed historical entity moving averages by >25%.</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Box 3: Gateway Automation & System Resilience Telemetry -->
+            <div class="card-box" style="flex: 0.75;">
+                <div class="section-title">Gateway Automation & System Resilience Telemetry</div>
+                <div class="telemetry-grid">
+                    <div class="telemetry-item">
+                        <span>API Interception Latency</span>
+                        <h5>&lt; 14.2 ms</h5>
+                    </div>
+                    <div class="telemetry-item">
+                        <span>Nostro Liquidity Ratio</span>
+                        <h5>99.4% Protected</h5>
+                    </div>
+                    <div class="telemetry-item">
+                        <span>False Positive Rate</span>
+                        <h5>0.38% (Optimized)</h5>
+                    </div>
+                    <div class="telemetry-item">
+                        <span>Auto-Correction Success</span>
+                        <h5>89.1% Resolved</h5>
+                    </div>
+                    <div class="telemetry-item">
+                        <span>Peak Window Overhead</span>
+                        <h5>+2.1% CPU Load</h5>
+                    </div>
+                    <div class="telemetry-item">
+                        <span>Compliance Audit Trail</span>
+                        <h5>100% Immutable</h5>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+
+    </div>
+</div>
+
+</body>
+</html>
