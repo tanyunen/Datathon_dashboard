@@ -5,6 +5,13 @@ short way to present each one. The dashboards analyze 10 million rows from a
 synthetic (fictional) payment dataset. Say "in this dataset" when describing
 results; these findings are not automatically true of the real SWIFT network.
 
+## Export to PDF
+
+From the dashboard hub, select **Convert all to PDF** to prepare a combined
+PDF with all 11 dashboards, one per A3 landscape page. In the browser's print
+dialog, choose **Save as PDF**. To save only the dashboard you are viewing,
+select **Convert to PDF** in its navigation bar.
+
 ## A few terms to know
 
 - **Sender / beneficiary:** the party sending / receiving a payment.

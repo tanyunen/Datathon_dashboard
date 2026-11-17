@@ -307,7 +307,8 @@ body[data-dashboard="5"] .chart-panel img {
 }
 
 .dashboard-nav a,
-.dashboard-nav select {
+.dashboard-nav select,
+.dashboard-nav button {
   min-height: 34px;
   padding: 7px 10px;
   border: 1px solid #cbded3;
@@ -315,6 +316,10 @@ body[data-dashboard="5"] .chart-panel img {
   background: #fff;
   color: #07583e;
   font: inherit;
+}
+
+.dashboard-nav a,
+.dashboard-nav button {
   text-decoration: none;
 }
 
@@ -325,8 +330,22 @@ body[data-dashboard="5"] .chart-panel img {
   white-space: nowrap;
 }
 
+.dashboard-nav button {
+  cursor: pointer;
+  white-space: nowrap;
+}
+
+.dashboard-nav .nav-export {
+  border-color: #087a50;
+  background: #087a50;
+  color: #fff;
+  font-weight: 700;
+}
+
 .dashboard-nav a:hover,
+.dashboard-nav button:hover,
 .dashboard-nav a:focus-visible,
+.dashboard-nav button:focus-visible,
 .dashboard-nav select:focus-visible {
   border-color: #168052;
   outline: 2px solid #168052;
@@ -403,7 +422,8 @@ body[data-dashboard="5"] .chart-panel img {
   }
 
   .dashboard-nav a,
-  .dashboard-nav select {
+  .dashboard-nav select,
+  .dashboard-nav button {
     padding: 6px 7px;
     font-size: 12px;
   }

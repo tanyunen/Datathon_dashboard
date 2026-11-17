@@ -25,13 +25,37 @@
     }
     main { max-width: 1120px; margin: auto; }
     header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 20px;
       padding: 28px;
       border-radius: 14px;
       color: white;
       background: linear-gradient(110deg, #087a50, #104b38);
     }
+    .header-copy { min-width: 0; }
     header p { margin: 4px 0 0; color: #d6f4e8; }
     h1 { margin: 0; font-family: "Segoe UI", Arial, sans-serif; font-size: clamp(22px, 2vw, 28px); font-weight: 800; line-height: 1.25; }
+    .pdf-button {
+      display: inline-flex;
+      flex: 0 0 auto;
+      min-height: 42px;
+      align-items: center;
+      justify-content: center;
+      padding: 9px 14px;
+      border: 1px solid #fff;
+      border-radius: 7px;
+      background: #fff;
+      color: var(--green);
+      font-weight: 700;
+      text-decoration: none;
+      white-space: nowrap;
+    }
+    .pdf-button:hover, .pdf-button:focus-visible {
+      outline: 3px solid #a3e6c6;
+      outline-offset: 2px;
+    }
     h2 { margin: 28px 0 12px; color: var(--green); font-size: 20px; }
     .notice {
       margin: 18px 0;
@@ -84,14 +108,20 @@
       text-transform: uppercase;
       letter-spacing: .04em;
     }
-    @media (max-width: 600px) { body { padding: 14px; } header { padding: 20px; } }
+    @media (max-width: 600px) {
+      body { padding: 14px; }
+      header { align-items: flex-start; flex-direction: column; padding: 20px; }
+    }
   </style>
 </head>
 <body>
 <main>
   <header>
-    <h1>SWIFT Datathon 2026</h1>
-    <p>Dashboard hub · Findings from the fictitious payment dataset</p>
+    <div class="header-copy">
+      <h1>SWIFT Datathon 2026</h1>
+      <p>Dashboard hub · Findings from the fictitious payment dataset</p>
+    </div>
+    <a class="pdf-button" href="print_all.html?print=1" title="Create one PDF with all 11 dashboards">Convert all to PDF</a>
   </header>
 
   <p class="notice"><strong>Interpretation:</strong> The competition dataset is synthetic. Values describe this dataset, not actual SWIFT network activity. Findings are associations unless the analysis establishes otherwise.</p>

@@ -75,5 +75,14 @@
     next.setAttribute("aria-disabled", "true");
   }
   nav.append(next);
+
+  const exportButton = document.createElement("button");
+  exportButton.type = "button";
+  exportButton.className = "nav-export";
+  exportButton.textContent = "Convert to PDF";
+  exportButton.title = "Save this dashboard as a PDF";
+  exportButton.addEventListener("click", () => window.print());
+  nav.append(exportButton);
+
   document.body.prepend(nav);
 })();
