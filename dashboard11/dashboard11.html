@@ -370,26 +370,26 @@ body {
 }
 
 </style>
+<link rel="stylesheet" href="../dashboard_shared.css">
 </head>
 
-<body>
+<body data-dashboard="11" data-dashboard-root="..">
 
 <div class="dashboard">
 
     <!-- HEADER -->
 
-    <header class="header">
+    <header class="header dashboard-header">
 
-        <div>
-            <h1>SWIFT DATATHON 2026 — TRANSACTION TRAFFIC OVER TIME</h1>
+        <div class="dashboard-header-content">
+            <h1>SWIFT Datathon 2026 — Transaction Traffic Over Time</h1>
 
             <p>
-                TEMPORAL PATTERNS: IDENTIFYING TRANSACTION PEAKS,
-                DAILY DISTRIBUTION AND TIME-BASED BEHAVIOUR
+                Hourly and weekday activity in Malaysia time · Uniform distribution is the comparison baseline
             </p>
         </div>
 
-        <div class="header-tag">
+        <div class="header-tag dashboard-badge">
             DASHBOARD #11
         </div>
 
@@ -428,7 +428,7 @@ body {
             <div class="kpi-label">PEAK-HOUR TRANSACTION SHARE</div>
             <div class="kpi-value">32.77%</div>
             <div class="kpi-note">
-                Six busiest hours combined
+                Six busiest hours; even-hour reference is 25%
             </div>
         </div>
 
@@ -445,7 +445,7 @@ body {
             <div class="chart-panel">
 
                 <img
-                    src="dashboard11_temporal/dashboard11_charts.png"
+                    src="dashboard11_charts.png"
                     alt="Four charts showing transaction traffic over time"
                 >
 
@@ -563,8 +563,9 @@ body {
 
                                 <li>
                                     <b>Weekend activity:</b>
-                                    Saturday and Sunday account for
-                                    14.72% of total volume.
+                                    against the Monday-Friday average
+                                    (1,705,507 rows/day), Saturday is
+                                    46.1% lower and Sunday 67.6% lower.
                                 </li>
 
                             </ul>
@@ -575,28 +576,26 @@ body {
 
                         <div class="brief-section">
 
-                            <h3>2. RECONSTRUCTED TEMPORAL PATTERNS</h3>
+                            <h3>2. RECONSTRUCTED RULE VS BASELINE</h3>
 
                             <p>
-                                The timestamp distribution suggests that
-                                transaction records are not evenly
-                                distributed across the day or week.
+                                Across all 10,000,000 valid timestamps,
+                                the even-hour reference is 416,667 records
+                                per hour. The busiest hour (23:00) has
+                                585,888 records (about 1.41 times that
+                                reference); the quietest (11:00) has
+                                218,010 (about 0.52 times). The six busiest
+                                hours contain 32.77% of records, versus
+                                25% under an even-hour distribution.
                             </p>
 
                             <ul>
-
                                 <li>
-                                    <b>Hourly pattern:</b>
-                                    Transaction counts vary across the
-                                    24-hour period, suggesting non-uniform
-                                    hourly timestamp sampling.
-                                </li>
-
-                                <li>
-                                    <b>Weekday pattern:</b>
-                                    Transaction volumes differ between
-                                    weekdays and weekends, suggesting
-                                    day-related variation.
+                                    <b>Weekday/weekend comparison:</b>
+                                    average Monday-Friday volume is 1,705,507
+                                    rows/day; Saturday has 919,876 and Sunday
+                                    552,588. These are record-count drops,
+                                    not measured clearing delays.
                                 </li>
 
                                 <li>
@@ -622,30 +621,38 @@ body {
 
                         <div class="brief-section">
 
-                            <h3>3. DATASET GENERATION IMPLICATIONS</h3>
+                            <h3>3. HYPOTHESIS AND UNCERTAINTY</h3>
 
                             <p>
-                                The observed temporal patterns provide
-                                clues about how the synthetic dataset
-                                may have been constructed.
+                                Hypothesis: timestamps are evenly distributed
+                                across hours and weekdays. The counts do not
+                                support an even-hour pattern. They show an
+                                uneven dataset distribution, but do not reveal
+                                whether it comes from realistic activity,
+                                synthetic sampling choices, or another factor.
                             </p>
 
                             <ul>
 
                                 <li>
-                                    The timestamp generator may use weighted
-                                    hourly sampling instead of uniform sampling.
+                                    <b>What is supported:</b> this sample has
+                                    more rows at some hours and weekdays than
+                                    others.
                                 </li>
 
                                 <li>
-                                    Different weekday and weekend distributions
-                                    may be incorporated into timestamp generation.
+                                    <b>What is unknown:</b> there is no
+                                    sender time-zone, clearing outcome,
+                                    queue, or holiday field. Malaysia-time
+                                    counts cannot establish sender-local
+                                    banking windows; a country code alone
+                                    cannot resolve multiple time zones.
                                 </li>
 
                                 <li>
-                                    Further analysis should compare time patterns
-                                    with transaction type, currency, participant
-                                    type and anomaly category.
+                                    Treat the result as a property of this
+                                    synthetic dataset, not a staffing forecast
+                                    for the real SWIFT network.
                                 </li>
 
                             </ul>
@@ -670,14 +677,16 @@ body {
 
                                 <li>
                                     <b>Payment-processing capacity:</b>
-                                    Use peak periods to guide capacity planning
-                                    and resource allocation.
+                                    Treat these synthetic peaks as a test
+                                    case; use production traffic and service
+                                    evidence before staffing decisions.
                                 </li>
 
                                 <li>
                                     <b>Operational monitoring:</b>
-                                    Monitor transaction queues and processing
-                                    performance during high-volume periods.
+                                    Pair volume patterns with queue and
+                                    processing fields before assessing
+                                    operational pressure.
                                 </li>
 
                                 <li>
@@ -688,9 +697,9 @@ body {
 
                                 <li>
                                     <b>Intelligent queue management:</b>
-                                    Prioritise transactions ready for processing
-                                    while managing those waiting for an available
-                                    payment route or settlement window.
+                                    Evaluate a time-aware queue policy only
+                                    with queue-state and route-availability
+                                    data; neither is present here.
                                 </li>
 
                                 <li>
@@ -710,24 +719,23 @@ body {
                             <h3>5. OVERALL CONCLUSION</h3>
 
                             <p>
-                                Transaction traffic in the synthetic dataset
-                                is temporally uneven. Hourly and weekday
-                                patterns provide evidence for reconstructing
-                                possible timestamp-generation logic and can
-                                support operational planning. An
-                                <b>Intelligent Time-Aware Payment Queue
-                                Management</b> approach could use these
-                                patterns to help manage processing queues
-                                and reduce potential delays.
+                                Transaction traffic in this synthetic dataset
+                                is temporally uneven, with substantial weekend
+                                count reductions versus the weekday average.
+                                These distributions can guide further analysis
+                                of synthetic timestamp patterns, but they do
+                                not establish actual clearing cycles, the
+                                sending bank's local banking hours, or queue
+                                delays.
                             </p>
 
                             <p class="small-note">
-                                Limitation: The dataset is synthetic and
-                                fictitious. Route availability, settlement
-                                windows and queue status are not included
-                                in the temporal analysis. These patterns
-                                should not be interpreted as actual global
-                                SWIFT payment behaviour.
+                                Limitation: Times are displayed in
+                                Asia/Kuala_Lumpur (UTC+8). The dataset has no
+                                sender time-zone, route-availability,
+                                settlement-window, or queue-status field.
+                                These patterns are not actual global SWIFT
+                                clearing behaviour or a staffing forecast.
                             </p>
 
                         </div>
@@ -759,5 +767,6 @@ body {
 
 </div>
 
+<script src="../dashboard_nav.js"></script>
 </body>
 </html>

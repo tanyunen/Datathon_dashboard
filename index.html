@@ -1,94 +1,158 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <title>SWIFT Datathon 2026 — Executive Intelligence Suite</title>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
-    <style>
-        :root {
-            --primary-dark: #0f172a;
-            --mint-primary: #00875a;
-            --mint-dark: #006644;
-            --bg-page: #f1f5f9;
-        }
-        body {
-            font-family: 'Inter', sans-serif;
-            background-color: var(--bg-page);
-            color: var(--primary-dark);
-            margin: 0;
-            padding: 40px;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            height: 100vh;
-            box-sizing: border-box;
-            justify-content: center;
-        }
-        h1 { margin-bottom: 5px; text-align: center; }
-        p { color: #475569; margin-bottom: 30px; text-align: center; }
-        .grid {
-            display: grid;
-            grid-template-columns: repeat(2, 1fr);
-            gap: 20px;
-            width: 100%;
-            max-width: 800px;
-        }
-        .card {
-            background: #ffffff;
-            border-radius: 8px;
-            padding: 20px;
-            border-top: 4px solid var(--mint-primary);
-            box-shadow: 0 4px 6px rgba(0,0,0,0.05);
-            text-decoration: none;
-            color: inherit;
-            transition: transform 0.2s, box-shadow 0.2s;
-        }
-        .card:hover, .card.active {
-            transform: translateY(-3px);
-            box-shadow: 0 6px 12px rgba(0, 135, 90, 0.2);
-            border-color: var(--mint-dark);
-            background: #f0fdf4;
-        }
-        .card h3 { margin: 0 0 8px 0; color: var(--mint-dark); font-size: 16px; }
-        .card span { font-size: 13px; color: #64748b; }
-        .hint { margin-top: 25px; font-size: 12px; color: #64748b; font-weight: 600; }
-    </style>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>SWIFT Datathon 2026 | Dashboard Hub</title>
+  <style>
+    :root {
+      color-scheme: light;
+      --ink: #153f32;
+      --muted: #526b61;
+      --green: #07583e;
+      --mint: #e6f4ea;
+      --line: #dce7e0;
+      --paper: #fff;
+      --page: #f1f5f2;
+    }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      padding: 28px;
+      background: var(--page);
+      color: var(--ink);
+      font: 16px/1.5 "Segoe UI", Arial, sans-serif;
+    }
+    main { max-width: 1120px; margin: auto; }
+    header {
+      padding: 28px;
+      border-radius: 14px;
+      color: white;
+      background: linear-gradient(110deg, #087a50, #104b38);
+    }
+    header p { margin: 4px 0 0; color: #d6f4e8; }
+    h1 { margin: 0; font-family: "Segoe UI", Arial, sans-serif; font-size: clamp(22px, 2vw, 28px); font-weight: 800; line-height: 1.25; }
+    h2 { margin: 28px 0 12px; color: var(--green); font-size: 20px; }
+    .notice {
+      margin: 18px 0;
+      padding: 14px 18px;
+      border-left: 5px solid #d5a72d;
+      border-radius: 7px;
+      background: #fffaf0;
+    }
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(245px, 1fr));
+      gap: 14px;
+    }
+    a.card {
+      display: block;
+      min-height: 145px;
+      padding: 18px;
+      border: 1px solid var(--line);
+      border-radius: 10px;
+      background: var(--paper);
+      color: inherit;
+      text-decoration: none;
+      box-shadow: 0 2px 6px #153f320d;
+    }
+    a.card:hover, a.card:focus-visible {
+      border-color: #168052;
+      outline: 2px solid #168052;
+      outline-offset: 2px;
+    }
+    .card strong { display: block; margin-bottom: 5px; color: var(--green); font-size: 17px; }
+    .card span { color: var(--muted); font-size: 14px; }
+    .panel, .insight {
+      padding: 18px;
+      border: 1px solid var(--line);
+      border-radius: 10px;
+      background: var(--paper);
+    }
+    .panel ul { margin: 0; padding-left: 20px; }
+    .panel li + li { margin-top: 6px; }
+    .insights { display: grid; grid-template-columns: repeat(auto-fit, minmax(245px, 1fr)); gap: 14px; }
+    .insight strong { display: block; margin-bottom: 5px; color: var(--green); }
+    .insight p { margin: 0; color: var(--muted); font-size: 14px; }
+    .tag {
+      display: inline-block;
+      margin-bottom: 8px;
+      padding: 2px 8px;
+      border-radius: 999px;
+      background: var(--mint);
+      color: var(--green);
+      font-size: 11px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: .04em;
+    }
+    code { overflow-wrap: anywhere; }
+    footer { margin-top: 30px; color: var(--muted); font-size: 13px; }
+    @media (max-width: 600px) { body { padding: 14px; } header { padding: 20px; } }
+  </style>
 </head>
 <body>
+<main>
+  <header>
+    <h1>SWIFT Datathon 2026</h1>
+    <p>Dashboard hub · Findings from the fictitious payment dataset</p>
+  </header>
 
-    <h1>SWIFT Datathon 2026 — Executive Intelligence Suite</h1>
-    <p>Press <strong>Enter ↵</strong> to launch Dashboard #1, or click any module below.</p>
+  <p class="notice"><strong>Interpretation:</strong> The competition dataset is synthetic. Values describe this dataset, not actual SWIFT network activity. Findings are associations unless the analysis establishes otherwise.</p>
 
-    <div class="grid">
-        <a href="dashboard1.html" class="card" id="link-1">
-            <h3>Dashboard #1</h3>
-            <span>Routing Architecture Dynamics & Intermediary Hops</span>
-        </a>
-        <a href="dashboard_2.html" class="card" id="link-2">
-            <h3>Dashboard #2</h3>
-            <span>Operational Resilience & Message-Type Vulnerabilities</span>
-        </a>
-        <a href="dashboard_3.html" class="card" id="link-3">
-            <h3>Dashboard #3</h3>
-            <span>Macro Corridor Topology & Capital Drag Impact</span>
-        </a>
-        <a href="try4.html" class="card" id="link-4">
-            <h3>Dashboard #4</h3>
-            <span>Business vs. Consumer Party-Pair & Batch Dynamics</span>
-        </a>
-    </div>
+  <h2>Competition submission checklist</h2>
+  <section class="panel">
+    <ul>
+      <li>Submit 5–15 feature-group dashboards and a 10–20-slide PDF presentation.</li>
+      <li>Use the supplied dataset as the primary evidence; external data must not replace it as the primary analysis source.</li>
+      <li>Explain the method, sample size, units, and evidence behind each major finding.</li>
+      <li>AI assistance is allowed, but entrants should understand and be able to explain their analysis.</li>
+    </ul>
+  </section>
 
-    <div class="hint">Tip: Pressing Enter automatically opens Dashboard #1.</div>
+  <h2>Dashboards grouped by feature type</h2>
+  <h3>Routing and message paths</h3>
+  <section class="grid" aria-label="Routing and message path dashboards">
+    <a class="card" href="dashboard1.html"><span class="tag">Dashboard 1</span><strong>Route participants and duration</strong><span>Participant-count groups, route sample sizes, and duration vs the 2-participant baseline.</span></a>
+    <a class="card" href="dashboard_2.html"><span class="tag">Dashboard 2</span><strong>Transaction type and continuity</strong><span>Direct, Indirect, and Covered records; incomplete-path rates vs Direct baseline.</span></a>
+    <a class="card" href="dashboard_3.html"><span class="tag">Dashboard 3</span><strong>Path continuity and duration</strong><span>Duration for continuous vs incomplete paths, using Y as the comparison baseline.</span></a>
+  </section>
+  <h3>Party profiles and transaction text</h3>
+  <section class="grid" aria-label="Party profile dashboards">
+    <a class="card" href="try4.html"><span class="tag">Dashboard 4 · Current</span><strong>Business vs Consumer payments</strong><span>Sender/beneficiary types, amounts vs Consumer baseline, and pair mix.</span></a>
+    <a class="card" href="dashboard5.html"><span class="tag">Dashboard 5</span><strong>Party text patterns</strong><span>Engineered token composition and name-field comparisons across party types.</span></a>
+  </section>
+  <h3>Currency and foreign-exchange features</h3>
+  <section class="grid" aria-label="Currency and foreign exchange dashboards">
+    <a class="card" href="dashboard6/dashboard6_version2.html"><span class="tag">Dashboard 6</span><strong>Currency and FX mix</strong><span>Currency usage, FX-step distribution, and filtered-vs-all-currency comparison.</span></a>
+    <a class="card" href="dashboard7/dashboard7_slide(final).html"><span class="tag">Dashboard 7</span><strong>FX steps and duration</strong><span>Median and P90 duration vs the one-conversion baseline.</span></a>
+    <a class="card" href="dashboard_9.html"><span class="tag">Dashboard 9</span><strong>Anomaly-label rate by currency</strong><span>Currency groups with at least 50,000 records compared with the eligible-record baseline.</span></a>
+  </section>
+  <h3>Anomaly labels and timing</h3>
+  <section class="grid" aria-label="Anomaly and timing dashboards">
+    <a class="card" href="dashboard_8.html"><span class="tag">Dashboard 8</span><strong>Anomaly labels</strong><span>Label counts and payment amounts vs records without the displayed labels; amounts are not losses.</span></a>
+    <a class="card" href="daahboard_10.html"><span class="tag">Dashboard 10</span><strong>Anomaly-label rates by hour and type</strong><span>Hourly rates compared with each transaction type’s own all-hour baseline.</span></a>
+    <a class="card" href="dashboard11/dashboard11.html"><span class="tag">Dashboard 11</span><strong>Transaction timing</strong><span>Hourly and weekday volumes compared with even-distribution reference lines.</span></a>
+  </section>
 
-    <script>
-        // Listen for the Enter key press anywhere on the page
-        document.addEventListener('keydown', function(event) {
-            if (event.key === 'Enter') {
-                // Automatically navigates to Dashboard #1 when Enter is pressed
-                window.location.href = 'dashboard1.html';
-            }
-        });
-    </script>
+  <h2>Key findings from this dataset</h2>
+  <section class="insights" aria-label="Key validated findings">
+    <article class="insight"><strong>Business sender amounts</strong><p>Business senders are 78.75% of records. Their median normalized amount is $5,537.36 versus $772.62 for Consumer senders; this is descriptive, not a payment-purpose explanation.</p></article>
+    <article class="insight"><strong>Largest party-type pair</strong><p>Business-to-Consumer records are 56.04% of the dataset (5,603,692 records). Party-type fields do not establish whether these are payroll or other payouts.</p></article>
+    <article class="insight"><strong>Path continuity by transaction type</strong><p>The incomplete-path flag is N for 4.99% of Direct, 12.29% of Indirect, and 12.32% of Covered records. N is not a payment failure.</p></article>
+    <article class="insight"><strong>Route participant count</strong><p>Mean duration rises from 663 seconds at two participants to 841 at three and 1,042 at four. This is an observed association; large-count groups are sparse.</p></article>
+    <article class="insight"><strong>Time pattern</strong><p>In Malaysia time (UTC+8), 23:00 is the busiest hour and Friday the busiest day. These describe the synthetic timestamp distribution.</p></article>
+    <article class="insight"><strong>Anomaly labels</strong><p>7,006 records (0.0701%) carry one of the analyzed anomaly labels. Normalized payment amounts are not confirmed losses or fraud outcomes.</p></article>
+  </section>
 
+  <h2>Rebuild charts from your local CSV</h2>
+  <p>Run these from PowerShell in this project folder, replacing the example with your dataset path:</p>
+  <p><code>py .\generate_verified_charts.py "C:\path\to\swift_umdac_datathon_2026_fictitious_payment_data.csv"</code></p>
+  <p><code>py .\generate_dashboards9_10.py "C:\path\to\swift_umdac_datathon_2026_fictitious_payment_data.csv"</code></p>
+  <p><code>py .\chart_4.py "C:\path\to\swift_umdac_datathon_2026_fictitious_payment_data.csv"</code></p>
+  <p><code>py .\chart_8.py "C:\path\to\swift_umdac_datathon_2026_fictitious_payment_data.csv"</code></p>
+
+  <footer>For judging readiness, each feature page should state its testable question, reconstructed rule, comparison baseline, scope/sample size, method, and uncertainty. Dashboard comparisons describe this synthetic dataset; they do not establish operational causes or interventions. Check chart loading and print each feature dashboard to PDF before submission.</footer>
+</main>
 </body>
 </html>

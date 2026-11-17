@@ -115,19 +115,19 @@ body {
 }
 
 .left-column {
-    display: grid;
-    grid-template-rows: 1.12fr 0.88fr;
+    display: flex;
+    flex-direction: column;
     gap: 8px;
     min-height: 0;
-    overflow: hidden;
+    overflow: visible;
 }
 
 .right-column {
-    display: grid;
-    grid-template-rows: 1.12fr 1.12fr 0.95fr 0.95fr;
-    gap: 7px;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
     min-height: 0;
-    overflow: hidden;
+    overflow: visible;
 }
 
 /* PANELS */
@@ -162,6 +162,12 @@ body {
     flex: 1;
     min-height: 0;
     object-fit: contain;
+}
+
+.chart-baseline-note {
+    margin: 0 0 3px;
+    color: #526b61;
+    font-size: 7.5px;
 }
 
 /* TABLE */
@@ -316,20 +322,21 @@ td {
 }
 
 </style>
+<link rel="stylesheet" href="./dashboard_shared.css">
 </head>
 
-<body>
+<body data-dashboard="5" data-dashboard-root=".">
 
 <div class="dashboard">
 
 <!-- HEADER -->
 
-<header class="header">
-
-    <h1>TRANSACTION TEXT STRUCTURE &amp; IDENTITY PATTERNS</h1>
-
-    <span>FEATURE GROUP 2 | PARTY PROFILES &amp; DEMOGRAPHICS</span>
-
+<header class="header dashboard-header">
+    <div class="dashboard-header-content">
+        <h1>SWIFT Datathon 2026 — Transaction Text Structure &amp; Identity Patterns</h1>
+        <p>Party-text structure and identity tokens · Business is the token-count baseline</p>
+    </div>
+    <span class="dashboard-badge">Dashboard #5</span>
 </header>
 
 <!-- KPI CARDS -->
@@ -371,6 +378,9 @@ td {
     <section class="panel chart-panel">
 
         <h2>1. Text Structure &amp; Token Analysis</h2>
+        <p class="chart-baseline-note">
+            Business is the baseline; charts compare Consumer text length and token count with Business records.
+        </p>
 
         <img
             src="dashboard5_text_structure.png"
@@ -384,9 +394,13 @@ td {
         <h2>2. Identity &amp; Shared Information Analysis</h2>
 
         <p class="table-description">
-            Percentage of transactions containing each token at least once.
+            Percentage of transactions containing each token at least once,
+            calculated within each column's party-type group. Sample sizes:
+            Sender B 7,874,637; Sender C 2,125,363; Beneficiary B 2,881,550;
+            Beneficiary C 7,118,450.
         </p>
 
+        <div class="table-scroll">
         <table>
 
             <thead>
@@ -414,16 +428,13 @@ td {
             </tbody>
 
         </table>
+        </div>
 
         <p class="table-description" style="margin-top:4px;">
             B = Business; C = Consumer.
         </p>
 
     </section>
-
-</div>
-
-<div class="right-column">
 
     <section class="panel">
 
@@ -462,23 +473,35 @@ td {
             </p>
         </div>
 
+    </section>
+
+</div>
+
+<div class="right-column">
+
+    <section class="panel">
+
+        <h2>3. Key Analytical Findings (continued)</h2>
+
         <div class="item">
             <div class="item-title">
                 Finding 4 | Similar Text Lengths
             </div>
             <p>
-                Median text length is 68–69 characters across all
+                Mean text length is about 66–68 characters across the
                 four groups, despite differences in token composition.
             </p>
         </div>
 
         <div class="item">
             <div class="item-title">
-                Finding 5 | Shared Information Fields
+                Finding 5 | Jurisdiction is the stronger IBAN signal
             </div>
             <p>
-                Street, city, country_code, post_code and IBAN tokens
-                occur in both participant types at broadly similar rates.
+                IBAN markers occur in 0% of US, Singapore, and China BICs,
+                versus about 92% for Germany. After country standardization,
+                Business vs Consumer rates are 51.27% vs 50.81% for senders
+                and 50.17% vs 50.16% for beneficiaries.
             </p>
         </div>
 
@@ -490,11 +513,13 @@ td {
 
         <div class="item">
             <div class="item-title">
-                Rule 1 | Participant-type-dependent Identity Composition
+                Rule 1 | Sender token count vs Consumer baseline
             </div>
             <p>
-                Identity token categories differ between Business
-                and Consumer participant records.
+                Among sender records in this 10M-row dataset, Consumer
+                descriptions average 7.62 tokens and Business descriptions
+                6.79 (0.83 fewer, about 10.9% below the Consumer baseline).
+                This describes engineered text features, not identity quality.
             </p>
         </div>
 
@@ -503,8 +528,10 @@ td {
                 Rule 2 | Consumer Name Structure
             </div>
             <p>
-                Consumer records commonly include personal-name tokens;
-                first_name and last_name strongly co-occur.
+                Among Consumer records where first_name is present,
+                last_name is also present in 92.01% of sender and
+                92.31% of beneficiary descriptions. The comparison is
+                conditional on first_name being present.
             </p>
         </div>
 
@@ -513,18 +540,23 @@ td {
                 Rule 3 | Business Identity Structure
             </div>
             <p>
-                Business records frequently include the business token;
-                company_keyword appears in a smaller share.
+                The business token appears in 85.38% of Business sender
+                descriptions, versus 0% of Consumer sender descriptions;
+                company_keyword appears in 26.31% of Business senders.
+                These are token flags, not verified legal identities.
             </p>
         </div>
 
         <div class="item">
             <div class="item-title">
-                Rule 4 | Shared Address and Banking Fields
+                Rule 4 | Country controls IBAN-marker prevalence
             </div>
             <p>
-                Both participant types can contain address and
-                banking-related token categories.
+                BIC8 characters 5–6 encode ISO-2 country. Standardized
+                within-country B/C rates (115 sender and 113 beneficiary
+                countries; at least 1,000 records per type) differ by
+                0.47 pp and 0.01 pp. The marker is synthetic, not
+                IBAN validation.
             </p>
         </div>
 
@@ -534,7 +566,8 @@ td {
             </div>
             <p>
                 Typical text length remains similar across participant
-                types, even when token counts differ.
+                types, even when token counts differ. Business is the
+                baseline comparison for the token-count charts.
             </p>
         </div>
 
@@ -545,18 +578,29 @@ td {
         <h2>5. Executive Analytical Brief</h2>
 
         <p>
-            The dataset exhibits different identity-token compositions
-            for Business and Consumer participants. Consumer records
-            contain personal-name tokens, while Business records
-            frequently contain business-related tokens.
+            <strong>Question and hypothesis:</strong> Do Business and
+            Consumer party descriptions have different engineered token
+            patterns? The testable expectation is that Consumer records
+            have more personal-name tokens and Business records have more
+            business-related tokens.
         </p>
 
         <p>
-            Consumer records have higher average token counts, yet
-            median text length remains between 68 and 69 characters
-            across all groups. This indicates differences in token
-            composition without a substantial difference in typical
-            text length.
+            Compared with the Business sender baseline (6.79 average
+            tokens), Consumer sender descriptions average 7.62 tokens.
+            Consumer records show first-name and last-name tokens, while
+            Business records frequently contain the business token.
+            These are patterns in the dataset's engineered text fields,
+            not verified identity information.
+        </p>
+
+        <p>
+            Party type explains little of the IBAN-marker difference after
+            standardizing for BIC country: the adjusted B/C gaps are only
+            0.47 percentage points for senders and 0.01 for beneficiaries.
+            Country is the stronger observed driver. Average text length
+            remains similar (about 66–68 characters); token rates do not
+            establish identity completeness or quality.
         </p>
 
         <div class="core-insight">
@@ -619,5 +663,6 @@ td {
 
 </div>
 
+<script src="./dashboard_nav.js"></script>
 </body>
 </html>

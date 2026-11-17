@@ -1,84 +1,160 @@
+import argparse
+from pathlib import Path
+
 import matplotlib.pyplot as plt
-import seaborn as sns
+import numpy as np
+import pandas as pd
 
-# Set global font and style
-plt.rcParams['font.sans-serif'] = 'Inter'
-plt.rcParams['axes.edgecolor'] = '#cbd5e1'
-plt.rcParams['axes.linewidth'] = 0.8
-
-# Color Palette
-mint_primary = "#036b49"
-mint_light = "#3ba880"
-slate_dark = '#0f172a'
-bg_color = '#f8fafc'
-
-# ==========================================
-# CHART 1: Volume & Median Amount by Sender Type
-# ==========================================
-fig, (ax1, ax2) = plt.subplots(1, 2, figsize=(10, 4.5), facecolor=bg_color)
-for ax in [ax1, ax2]:
-    ax.set_facecolor('#ffffff')
-
-# Subplot 1: Transaction Volume by Sender Type
-senders = ['Business (B)', 'Consumer (C)']
-volumes = [7874687, 2125313] # 78.75% vs 21.25%
-bars1 = ax1.bar(senders, [v / 1e6 for v in volumes], color=[mint_primary, mint_light], width=0.5)
-ax1.set_title('Transaction Volume (Millions)', fontsize=10, fontweight='bold', color=slate_dark)
-ax1.set_ylabel('Millions of Transactions', fontsize=9, color=slate_dark)
-#ax1.grid(axis='y', linestyle='--', alpha=0.5)
-ax1.set_ylim(0, 9)
-
-# Add data labels on top of bars
-for bar in bars1:
-    yval = bar.get_height()
-    ax1.text(bar.get_x() + bar.get_width()/2.0, yval + 0.2, f'{yval:.2f}M', ha='center', va='bottom', fontsize=9, fontweight='bold')
-
-# Subplot 2: Median Transaction Amount ($)
-medians = [5537.36, 772.62] # 7.17x difference
-bars2 = ax2.bar(senders, medians, color=[mint_primary, mint_light], width=0.5)
-ax2.set_title('Median Transaction Amount (USD)', fontsize=10, fontweight='bold', color=slate_dark)
-ax2.set_ylabel('USD ($)', fontsize=9, color=slate_dark)
-#ax2.grid(axis='y', linestyle='--', alpha=0.5)
-ax2.set_ylim(0, 6500)
-
-for bar in bars2:
-    yval = bar.get_height()
-    ax2.text(bar.get_x() + bar.get_width()/2.0, yval + 150, f'${yval:,.2f}', ha='center', va='bottom', fontsize=9, fontweight='bold')
-
-plt.tight_layout()
-plt.savefig('dashboard4_chart1_volume.png', dpi=300)
-plt.close()
+from chart_palette import PALETTE, PARTY_COLORS
 
 
-# ==========================================
-# CHART 2: Transaction Volume by Party Pair
-# ==========================================
-fig, ax = plt.subplots(figsize=(10, 4.5), facecolor=bg_color)
-ax.set_facecolor('#ffffff')
+PARTY_LABELS = {"B": "Business", "C": "Consumer"}
+COLORS = PARTY_COLORS
 
-pairs = ['B → C\n(Payroll / Payouts)', 'B → B\n(Trade Finance)', 'C → C\n(Retail P2P)', 'C → B\n(Bills & Retail)']
-pair_volumes = [5603692, 2270949, 1514768, 610605] # In absolute values
 
-# Highlight B -> C with a distinct color to emphasize dominance
-bar_colors = [mint_primary, mint_light, '#94a3b8', '#cbd5e1']
-bars3 = ax.bar(pairs, [v / 1e6 for v in pair_volumes], color=bar_colors, width=0.55)
+def main():
+    parser = argparse.ArgumentParser(
+        description="Generate Dashboard 4 charts from the competition CSV."
+    )
+    parser.add_argument("csv_path", type=Path, help="Path to the competition CSV file")
+    parser.add_argument(
+        "--output-dir",
+        type=Path,
+        default=Path(__file__).resolve().parent,
+        help="Directory for generated PNGs (default: this script's directory)",
+    )
+    parser.add_argument("--chunksize", type=int, default=500_000)
+    args = parser.parse_args()
 
-ax.set_title('Transaction Volume Density by Party-Pair Category', fontsize=11, fontweight='bold', color=slate_dark, pad=10)
-ax.set_ylabel('Transaction Volume (Millions)', fontsize=9, color=slate_dark)
-#ax.grid(axis='y', linestyle='--', alpha=0.5)
-ax.set_ylim(0, 6.5)
+    if not args.csv_path.is_file():
+        parser.error(f"CSV file not found: {args.csv_path}")
+    if args.chunksize < 1:
+        parser.error("--chunksize must be a positive integer")
+    args.output_dir.mkdir(parents=True, exist_ok=True)
 
-# Value annotations
-for bar in bars3:
-    yval = bar.get_height()
-    ax.text(bar.get_x() + bar.get_width()/2.0, yval + 0.15, f'{yval:.2f}M', ha='center', va='bottom', fontsize=9, fontweight='bold')
+    sender_counts = {"B": 0, "C": 0}
+    amount_values = {"B": [], "C": []}
+    pair_counts = {}
+    total_rows = 0
 
-# Callout annotation for B -> C dominance
-ax.annotate('Dominant B → C Batch Flow\n(56.04% of Total Network)', 
-            xy=(0, 5.6), xytext=(0.5, 6.0),
-            arrowprops=dict(facecolor=slate_dark, arrowstyle='->', lw=1),
-            fontsize=8.5, fontweight='bold', color=mint_primary)
+    for chunk in pd.read_csv(
+        args.csv_path,
+        usecols=["ORDERING_TYPE", "BENEFICIARY_TYPE", "USD_AMOUNT"],
+        chunksize=args.chunksize,
+        low_memory=True,
+        encoding="utf-8",
+    ):
+        total_rows += len(chunk)
+        sender = chunk["ORDERING_TYPE"].astype("string").str.strip()
+        beneficiary = chunk["BENEFICIARY_TYPE"].astype("string").str.strip()
+        amount = pd.to_numeric(chunk["USD_AMOUNT"], errors="coerce")
 
-plt.tight_layout()
-plt.savefig('dashboard4_chart2_pairs.png', dpi=300)
-plt.close()
+        for party, count in sender.value_counts().items():
+            sender_counts[party] = sender_counts.get(party, 0) + int(count)
+        pair_frame = pd.DataFrame({"sender": sender, "beneficiary": beneficiary})
+        for pair, count in pair_frame.value_counts(dropna=False).items():
+            sender_type, beneficiary_type = pair
+            key = (str(sender_type), str(beneficiary_type))
+            pair_counts[key] = pair_counts.get(key, 0) + int(count)
+
+        for party in PARTY_LABELS:
+            values = amount.loc[sender.eq(party).fillna(False) & amount.notna()]
+            if not values.empty:
+                amount_values[party].append(values.to_numpy(dtype="float64"))
+
+    parties = ["B", "C"]
+    counts = [sender_counts[party] for party in parties]
+    medians = [
+        float(np.median(np.concatenate(amount_values[party])))
+        if amount_values[party]
+        else 0.0
+        for party in parties
+    ]
+
+    plt.rcParams.update(
+        {
+            "font.family": "sans-serif",
+            "font.sans-serif": ["Inter", "Arial", "DejaVu Sans"],
+            "axes.edgecolor": "#cbd5e1",
+            "axes.linewidth": 0.8,
+        }
+    )
+
+    fig, axes = plt.subplots(1, 2, figsize=(10, 4.5), facecolor="#f8fafc")
+    for ax in axes:
+        ax.set_facecolor("#ffffff")
+
+    bars = axes[0].bar(
+        [PARTY_LABELS[party] for party in parties],
+        [count / 1_000_000 for count in counts],
+        color=[COLORS[party] for party in parties],
+        width=0.55,
+    )
+    axes[0].set_title("Transactions by sender type")
+    axes[0].set_ylabel("Records (millions)")
+    axes[0].bar_label(bars, labels=[f"{count / 1_000_000:.2f}M" for count in counts], padding=3)
+    axes[0].set_ylim(0, max(counts) / 1_000_000 * 1.18)
+    axes[0].spines[["top", "right"]].set_visible(False)
+
+    bars = axes[1].bar(
+        [PARTY_LABELS[party] for party in parties],
+        medians,
+        color=[COLORS[party] for party in parties],
+        width=0.55,
+    )
+    axes[1].set_title("Median payment amount")
+    axes[1].set_ylabel("Normalized amount (USD)")
+    axes[1].bar_label(bars, labels=[f"${value:,.2f}" for value in medians], padding=3)
+    axes[1].set_ylim(0, max(medians) * 1.18)
+    axes[1].spines[["top", "right"]].set_visible(False)
+
+    fig.suptitle("Sender type: volume and typical payment size", fontweight="bold")
+    fig.tight_layout()
+    fig.savefig(args.output_dir / "dashboard4_chart1_volume.png", dpi=240, bbox_inches="tight")
+    plt.close(fig)
+
+    pair_order = [("B", "C"), ("B", "B"), ("C", "C"), ("C", "B")]
+    pair_labels = [f"{a} → {b}" for a, b in pair_order]
+    values = [pair_counts.get(pair, 0) for pair in pair_order]
+    shares = [value / total_rows * 100 for value in values] if total_rows else [0] * len(values)
+
+    fig, ax = plt.subplots(figsize=(10, 4.5), facecolor="#f8fafc")
+    bars = ax.bar(
+        pair_labels,
+        [value / 1_000_000 for value in values],
+        color=[PALETTE[index] for index in range(len(pair_order))],
+        width=0.58,
+    )
+    ax.set_facecolor("#ffffff")
+    ax.set_title("Transactions by sender → beneficiary type")
+    ax.set_ylabel("Records (millions)")
+    ax.bar_label(
+        bars,
+        labels=[
+            f"{value / 1_000_000:.2f}M\n{share:.2f}%"
+            for value, share in zip(values, shares)
+        ],
+        padding=3,
+    )
+    ax.set_ylim(0, max(values) / 1_000_000 * 1.2)
+    ax.spines[["top", "right"]].set_visible(False)
+    fig.tight_layout()
+    fig.savefig(args.output_dir / "dashboard4_chart2_pairs.png", dpi=240, bbox_inches="tight")
+    plt.close(fig)
+
+    print(f"Scanned {total_rows:,} records.")
+    for party, count, median in zip(parties, counts, medians):
+        print(
+            f"{PARTY_LABELS[party]} sender: {count:,} ({count / total_rows:.2%}); "
+            f"median normalized amount ${median:,.2f}"
+        )
+    for (sender_type, beneficiary_type), value in zip(pair_order, values):
+        print(
+            f"{sender_type} -> {beneficiary_type}: {value:,} "
+            f"({value / total_rows:.2%})"
+        )
+    print(f"Charts saved to {args.output_dir.resolve()}")
+
+
+if __name__ == "__main__":
+    main()

@@ -2,322 +2,183 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>SWIFT — Executive Intelligence Dashboard #2</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>SWIFT Datathon 2026 — Dashboard 2: Transaction Type</title>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
     <style>
         :root {
             --primary-dark: #0f172a;
             --mint-primary: #00875a;
             --mint-dark: #006644;
-            --mint-light: #e6f4ea;
             --mint-border: #34d399;
             --bg-page: #f1f5f9;
-            --card-bg: #ffffff;
             --text-main: #1e293b;
             --text-muted: #475569;
             --border: #cbd5e1;
             --border-light: #e2e8f0;
         }
-
         html, body {
             height: 100vh;
             margin: 0;
             padding: 8px;
             overflow: hidden;
-            background-color: var(--bg-page);
-            font-family: 'Inter', -apple-system, BlinkMacSystemFont, Roboto, sans-serif;
+            background: var(--bg-page);
             color: var(--text-main);
-            -webkit-font-smoothing: antialiased;
+            font-family: Inter, Arial, sans-serif;
         }
-
         .dashboard-wrapper {
             width: 98vw;
             max-width: 1750px;
             height: 98vh;
-            margin: 0 auto;
+            margin: auto;
             display: grid;
             grid-template-rows: auto auto 1fr;
             gap: 10px;
             box-sizing: border-box;
         }
-
-        /* Header */
         .header-card {
-            background: linear-gradient(135deg, #00875a 0%, #006644 100%);
-            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
             padding: 12px 22px;
             border: 1px solid #005536;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            box-shadow: 0 4px 12px rgba(0, 135, 90, 0.15);
+            border-radius: 10px;
+            color: white;
+            background: linear-gradient(135deg, #00875a, #006644);
         }
-        .header-card h1 { margin: 0; font-size: 19px; font-weight: 800; color: #ffffff; letter-spacing: -0.3px; }
-        .header-card p { margin: 3px 0 0 0; font-size: 11.5px; color: #e2f8ed; text-transform: uppercase; font-weight: 600; letter-spacing: 0.5px; }
-        .badge { background: #ffffff; color: var(--mint-dark); border: 1px solid #a3e635; padding: 6px 14px; border-radius: 6px; font-size: 12px; font-weight: 800; text-transform: uppercase; letter-spacing: 0.5px; box-shadow: 0 2px 4px rgba(0,0,0,0.1); }
-
-        /* Top Metric Cards Row */
-        .metrics-row {
-            display: grid;
-            grid-template-columns: repeat(4, 1fr);
-            gap: 10px;
-        }
+        .header-card h1 { margin: 0; font-size: 19px; font-weight: 800; }
+        .header-card p { margin: 3px 0 0; color: #e2f8ed; font-size: 11.5px; font-weight: 600; text-transform: uppercase; }
+        .badge { padding: 6px 14px; border: 1px solid #a3e635; border-radius: 6px; background: white; color: var(--mint-dark); font-size: 12px; font-weight: 800; }
+        .metrics-row { display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; }
         .metric-card {
-            background: linear-gradient(135deg, #ffffff 0%, #f0fdf4 100%);
             padding: 10px 16px;
-            border-radius: 8px;
             border: 1px solid var(--border);
             border-left: 5px solid var(--mint-primary);
-            box-shadow: 0 2px 4px rgba(0,0,0,0.02);
+            border-radius: 8px;
+            background: linear-gradient(135deg, white, #f0fdf4);
         }
-        .metric-card span {
-            display: block;
-            font-size: 11px;
-            font-weight: 700;
-            color: var(--text-muted);
-            text-transform: uppercase;
-            letter-spacing: 0.5px;
-            margin-bottom: 2px;
-        }
-        .metric-card h3 {
-            margin: 0;
-            font-size: 15px;
-            font-weight: 800;
-            color: var(--primary-dark);
-        }
-
-        /* Main 2-Column Split Grid */
-        .main-grid {
-            display: grid;
-            grid-template-columns: 1fr 1.25fr;
-            gap: 10px;
-            min-height: 0;
-            height: 100%;
-        }
-
-        /* Left Column: Charts Stack */
-        .charts-stack {
-            display: flex;
-            flex-direction: column;
-            gap: 10px;
-            min-height: 0;
-            height: 100%;
-        }
+        .metric-card span { display: block; margin-bottom: 2px; color: var(--text-muted); font-size: 11px; font-weight: 700; text-transform: uppercase; }
+        .metric-card h3 { margin: 0; color: var(--primary-dark); font-size: 15px; font-weight: 800; }
+        .main-grid { display: grid; grid-template-columns: 1fr 1.25fr; gap: 10px; min-height: 0; height: 100%; }
+        .charts-stack, .right-column { display: flex; flex-direction: column; gap: 10px; min-height: 0; height: 100%; }
         .chart-widget {
-            background: linear-gradient(135deg, #ffffff 0%, #f8fafc 100%);
-            border-radius: 8px;
-            padding: 6px;
-            border: 1px solid var(--border);
-            box-shadow: 0 2px 4px rgba(0,0,0,0.02);
+            display: flex;
             flex: 1;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
             align-items: center;
+            justify-content: center;
             min-height: 0;
             overflow: hidden;
-            border-top: 3px solid var(--mint-primary);
-        }
-        .chart-widget img {
-            width: 100%;
-            height: 100%;
-            object-fit: contain;
-        }
-
-        /* Right Column */
-        .right-column {
-            display: flex;
-            flex-direction: column;
-            gap: 10px;
-            min-height: 0;
-            height: 100%;
-        }
-
-        /* Card Boxes */
-        .card-box {
-            background: linear-gradient(135deg, #ffffff 0%, #f4fbf7 100%);
-            border-radius: 8px;
+            padding: 8px;
             border: 1px solid var(--border);
-            box-shadow: 0 2px 4px rgba(0,0,0,0.02);
+            border-top: 3px solid var(--mint-primary);
+            border-radius: 8px;
+            background: white;
+        }
+        .chart-widget img { width: 100%; height: 100%; object-fit: contain; }
+        .card-box {
             display: flex;
             flex-direction: column;
-            overflow: hidden;
             min-height: 0;
+            overflow: hidden;
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            background: white;
         }
-        
         .section-title {
-            background: linear-gradient(135deg, #e6f4ea 0%, #d1fae5 100%);
-            color: var(--mint-dark);
             padding: 8px 14px;
+            border-bottom: 2px solid var(--mint-border);
+            background: linear-gradient(135deg, #e6f4ea, #d1fae5);
+            color: var(--mint-dark);
             font-size: 12px;
             font-weight: 800;
             text-transform: uppercase;
-            letter-spacing: 0.5px;
-            border-bottom: 2px solid var(--mint-border);
         }
-
-        /* Table Styling */
-        table { width: 100%; border-collapse: collapse; font-size: 11.5px; }
-        th, td { padding: 5px 8px; border-bottom: 1px solid var(--border-light); text-align: left; }
-        th { color: var(--primary-dark); font-size: 10.5px; text-transform: uppercase; background: #f1f5f9; font-weight: 700; }
-        tr:nth-child(even) { background-color: rgba(240, 253, 244, 0.4); }
-        tr:last-child td { border-bottom: none; }
-
-        /* Full Detailed Insights Styling */
+        table { width: 100%; border-collapse: collapse; font-size: 12px; }
+        th, td { padding: 6px 8px; border-bottom: 1px solid var(--border-light); text-align: left; }
+        th { background: #f1f5f9; color: var(--primary-dark); font-size: 10.5px; text-transform: uppercase; }
+        tr:nth-child(even) { background: #f8fafc; }
         .insights-content {
-            padding: 12px 16px;
             display: flex;
+            flex: 1;
             flex-direction: column;
             gap: 10px;
-            overflow-y: auto;
-            flex: 1;
             min-height: 0;
-            background: linear-gradient(180deg, #ffffff 0%, #f8fafc 100%);
+            overflow-y: auto;
+            padding: 12px 16px;
+            background: linear-gradient(180deg, white, #f8fafc);
         }
-        .insight-section h4 {
-            margin: 0 0 3px 0;
-            color: var(--mint-primary);
-            font-size: 13px;
-            text-transform: uppercase;
-            font-weight: 800;
-            letter-spacing: 0.3px;
-        }
-        .insight-section p {
-            margin: 0 0 4px 0;
-            color: var(--text-main);
-            font-size: 13px;
-            line-height: 1.45;
-        }
-        .insight-section ul {
-            margin: 3px 0 0 16px;
-            padding: 0;
-            color: var(--text-main);
-            font-size: 13px;
-            line-height: 1.4;
-        }
-        .insight-section li {
-            margin-bottom: 3px;
-        }
+        .insight-section h4 { margin: 0 0 4px; color: var(--mint-primary); font-size: 13px; text-transform: uppercase; }
+        .insight-section p, .insight-section ul { margin: 0; color: var(--text-main); font-size: 13px; line-height: 1.4; }
+        .insight-section ul { padding-left: 18px; }
     </style>
+<link rel="stylesheet" href="./dashboard_shared.css">
 </head>
-<body>
-
+<body data-dashboard="2" data-dashboard-root=".">
 <div class="dashboard-wrapper">
-    <!-- Header -->
-    <div class="header-card">
-        <div>
-            <h1>SWIFT Datathon 2026 — Routing & Network Behaviour</h1>
-            <p>Operational Resilience &amp; Exception Diagnostics: Message-Type Vulnerabilities and Liquidity Gridlocks</p>
+    <div class="header-card dashboard-header">
+        <div class="dashboard-header-content">
+            <h1>SWIFT Datathon 2026 — Transaction Type &amp; Path Continuity</h1>
+            <p>Transaction-type mix and path continuity · Direct is the incomplete-path baseline</p>
         </div>
-        <div class="badge">Dashboard #2</div>
+        <div class="badge dashboard-badge">Dashboard #2</div>
     </div>
 
-    <!-- Top Metric Cards Row -->
     <div class="metrics-row">
-        <div class="metric-card">
-            <span>Global Message Failure Rate</span>
-            <h3>4.8% (Exceptions &amp; Timeouts)</h3>
-        </div>
-        <div class="metric-card">
-            <span>High-Risk Message Type</span>
-            <h3>MT202COV (Cover Payments)</h3>
-        </div>
-        <div class="metric-card">
-            <span>Peak Congestion Window</span>
-            <h3>NY–London Handoff (16:00 UTC)</h3>
-        </div>
-        <div class="metric-card">
-            <span>Compliance Hold Impact</span>
-            <h3>+14.2 Hours Avg. Delay</h3>
-        </div>
+        <div class="metric-card"><span>Records analyzed</span><h3>10,000,000</h3></div>
+        <div class="metric-card"><span>Largest transaction type</span><h3>Direct · 6.32M (63.23%)</h3></div>
+        <div class="metric-card"><span>Incomplete-path records</span><h3>767,204 (7.67%)</h3></div>
+        <div class="metric-card"><span>Highest type-specific N share</span><h3>Covered · 12.32%</h3></div>
     </div>
 
-    <!-- Main 2-Column Split Grid -->
     <div class="main-grid">
-        
-        <!-- Left: Charts Stack -->
         <div class="charts-stack">
             <div class="chart-widget">
-                <img src="dashboard2_chart1_message_density.png" alt="Exception Density by Message Type">
+                <img src="dashboard2_chart1_transaction_types.png" alt="Record counts by Direct, Indirect, and Covered transaction type">
             </div>
             <div class="chart-widget">
-                <img src="dashboard2_chart2_congestion.png" alt="Temporal Congestion Trend">
+                <img src="dashboard2_chart2_continuity.png" alt="Continuous and incomplete path shares within each transaction type">
             </div>
         </div>
 
-        <!-- Right: Exception Matrix Table & Executive Brief -->
         <div class="right-column">
-            
-            <!-- Operational Exception Matrix Table -->
-            <div class="card-box" style="flex: 0.4;">
-                <div class="section-title">Granular Operational Exception Matrix &amp; Capital Stagnation Analysis</div>
+            <div class="card-box" style="flex: 0.7;">
+                <div class="section-title">Transaction type and path flag</div>
                 <div style="overflow-y: auto;">
                     <table>
-                        <thead>
-                            <tr>
-                                <th>Exception Code</th>
-                                <th>Root Cause &amp; Operational Failure</th>
-                                <th>Capital Locked / Impact</th>
-                                <th>Automated Protocol Mitigation</th>
-                            </tr>
-                        </thead>
+                        <thead><tr><th>Transaction type</th><th>Records</th><th>Incomplete (N)</th><th>N share</th></tr></thead>
                         <tbody>
-                            <tr>
-                                <td><strong>ERR-BIC-01</strong></td>
-                                <td>Typographic error or decommissioned BIC in interbank routing header.</td>
-                                <td>Low (Immediate Rejection)</td>
-                                <td>Real-time directory pre-validation engine at gateway.</td>
-                            </tr>
-                            <tr>
-                                <td><strong>LIQ-GRID-02</strong></td>
-                                <td>Depleted intraday nostro account balances during multi-hop clearing.</td>
-                                <td>High ($45M+ Avg. Stalled Capital)</td>
-                                <td>Dynamic bilateral liquidity pooling &amp; auto-replenishment.</td>
-                            </tr>
-                            <tr>
-                                <td><strong>AML-HOLD-03</strong></td>
-                                <td>Sanctions screening false positive on beneficiary/ordering party names.</td>
-                                <td>Critical (+14.2 Hours Manual Queue)</td>
-                                <td>Federated zero-knowledge trust ledger screening.</td>
-                            </tr>
+                            <tr><td><strong>Direct</strong></td><td>6,323,280</td><td>315,266</td><td>4.99%</td></tr>
+                            <tr><td><strong>Indirect</strong></td><td>3,260,758</td><td>400,676</td><td>12.29%</td></tr>
+                            <tr><td><strong>Covered</strong></td><td>415,962</td><td>51,262</td><td>12.32%</td></tr>
                         </tbody>
                     </table>
                 </div>
             </div>
-
-            <!-- Executive Analytical Brief -->
-            <div class="card-box" style="flex: 1.1;">
-                <div class="section-title">Comprehensive Economic &amp; Technical Analytical Brief</div>
+            <div class="card-box" style="flex: 1.3;">
+                <div class="section-title">Finding, interpretation, and limits</div>
                 <div class="insights-content">
                     <div class="insight-section">
-                        <h4>🎯 1. Structural Vulnerability: Message Architecture &amp; Cover Payment Friction</h4>
-                        <p><strong>The Economic Driver:</strong> Simpler direct customer remittances (MT103) achieve a 95% Straight-Through Processing (STP) success rate because the beneficiary details and funds move together. Conversely, MT202COV cover payments—designed to transmit interbank settlement instructions separately from underlying customer data—suffer an 11.4% exception rate. When intermediary banks cannot seamlessly match the cover payment instruction to the underlying commercial transaction across fragmented messaging channels, reconciliation collapses, forcing manual intervention.</p>
+                        <h4>1. Tested question and result</h4>
+                        <p>Direct records are the largest group at 63.23%; Indirect is 32.61%, and Covered is 4.16%. These are dataset shares, not SWIFT market shares.</p>
+                        <p>Question: Is the incomplete-path share the same across transaction types? It is not in this dataset, though the comparison does not establish why.</p>
                     </div>
-
                     <div class="insight-section">
-                        <h4>🏛️ 2. Temporal Friction: Timezone Handoffs &amp; Intraday Liquidity Gridlocks</h4>
-                        <p><strong>The Economic Driver:</strong> Payment congestion follows a strict follow-the-sun model, exploding to a peak index score of 96 at 16:00 UTC. This critical hour marks the overlap between the close of European banking hours and peak North American clearing activity. As institutions rush to settle end-of-day batches, cross-border payment instructions collide with static nostro/vostro credit limits. Without real-time visibility into foreign currency accounts, participating banks experience severe liquidity freezing.</p>
+                        <h4>2. Reconstructed rule vs baseline</h4>
+                        <p>Among records of each type, N occurs in 4.99% of Direct (baseline), 12.29% of Indirect, and 12.32% of Covered. That is about 2.46× and 2.47× the Direct rate, respectively. It is an association; it does not explain why a path is incomplete.</p>
                     </div>
-
                     <div class="insight-section">
-                        <h4>⚠️ 3. Regulatory Bottlenecks: The Multi-Hop Cost of Compliance False Positives</h4>
-                        <p><strong>The Economic Driver:</strong> While anti-money laundering (AML) compliance is non-negotiable, legacy sequential screening architectures act as massive operational drags. Because multi-hop routes require every intermediary bank to independently re-screen transaction metadata, innocent name matches (false positives) trigger mandatory freezes. This administrative friction traps institutional capital in manual review queues, extending end-to-end settlement times by an average of 14.2 hours.</p>
+                        <h4>3. Exact structural checks</h4>
+                        <p>Across all 10 million rows, 2 participants occurs only with Direct; every route with 3 or more participants is Indirect or Covered. The literal <code>...</code> marker appears in exactly 767,204 paths, all flagged N; it appears in none of the 9,232,796 Y paths. For Y rows, the semicolon-delimited path segment count matches <code>PARTICIPANT_COUNT</code>.</p>
                     </div>
-
                     <div class="insight-section">
-                        <h4>🚀 4. Reconstructed Business Rules &amp; Forward-Looking Infrastructure Roadmap</h4>
-                        <ul>
-                            <li><strong>Instant Two-Way API Exception Handlers:</strong> Transition from asynchronous batch error logs (which delay notification by hours) to real-time REST API webhooks that notify originating treasurers instantly.</li>
-                            <li><strong>Predictive Liquidity Routing:</strong> Integrate machine learning models into SWIFT gpi gateways to dynamically evaluate routing paths, bypassing intermediary banks experiencing intraday liquidity crunches during regional handoffs.</li>
-                        </ul>
+                        <h4>4. Field meaning and limit</h4>
+                        <p><code>CONTINUITY_QFLAG = N</code> means the recorded path is incomplete or discontinuous. These are exact patterns in this synthetic file, not proof of payment failure, rejection, or a compliance hold.</p>
                     </div>
                 </div>
             </div>
-
         </div>
-
     </div>
 </div>
-
+<script src="./dashboard_nav.js"></script>
 </body>
 </html>

@@ -198,49 +198,50 @@
             margin-bottom: 3px;
         }
     </style>
+<link rel="stylesheet" href="./dashboard_shared.css">
 </head>
-<body>
+<body data-dashboard="1" data-dashboard-root=".">
 
 <div class="dashboard-wrapper">
     <!-- 1. Header with Gradient Color Box -->
-    <div class="header-card">
-        <div>
-            <h1>SWIFT Datathon 2026 — Routing & Network Behaviour</h1>
-            <p>Routing Architecture Dynamics: Quantifying Compounding Latency Across Intermediary Corridors</p>
+    <div class="header-card dashboard-header">
+        <div class="dashboard-header-content">
+            <h1>SWIFT Datathon 2026 — Route Participants &amp; Duration</h1>
+            <p>Route participants and recorded duration · 2 participants is the duration baseline</p>
         </div>
-        <div class="badge">Dashboard #1</div>
+        <div class="badge dashboard-badge">Dashboard #1</div>
     </div>
 
     <!-- 2. Top Metric Cards Row -->
     <div class="metrics-row">
         <div class="metric-card">
-            <span>Primary Liquidity Corridor</span>
-            <h3>Nodes 2–3 (6M+ Volume)</h3>
+            <span>Participants 2–3</span>
+            <h3>8,647,599 records (86.5%)</h3>
         </div>
         <div class="metric-card">
-            <span>Latency Scaling Trend</span>
-            <h3>Exponential Compounding Growth</h3>
+            <span>Baseline comparison</span>
+            <h3>2 participants: 663 seconds mean</h3>
         </div>
         <div class="metric-card">
-            <span>Volume-Duration Tradeoff</span>
-            <h3>Inverse Correlation</h3>
+            <span>Largest route group</span>
+            <h3>2 participants: 6,323,280 records</h3>
         </div>
         <div class="metric-card">
-            <span>Data Integrity Flag</span>
-            <h3>Sparse Tail Anomaly (Nodes 13–14)</h3>
+            <span>Sparse route tail</span>
+            <h3>13–14 participants: 134 records</h3>
         </div>
     </div>
 
     <!-- 3. Main 2-Column Split Grid -->
     <div class="main-grid">
         
-        <!-- Left: Large Charts Stack -->
+        <!-- Left: dataset-derived charts -->
         <div class="charts-stack">
             <div class="chart-widget">
-                <img src="dashboard_routing_styled.png" alt="Routing Duration Chart">
+                <img src="dashboard_routing_styled.png" alt="Mean observed duration by route participant count from 2 through 14">
             </div>
             <div class="chart-widget">
-                <img src="dashboard_distribution_styled.png" alt="Transaction Volume Density Chart">
+                <img src="dashboard_distribution_styled.png" alt="Record count by participant count across all observed groups">
             </div>
         </div>
 
@@ -249,35 +250,41 @@
             
             <!-- Performance Matrix Table -->
             <div class="card-box" style="flex: 0.65;">
-                <div class="section-title">Routing Node Performance Matrix & Operational Friction</div>
+                <div class="section-title">Participant-count groups and sample sizes</div>
                 <div style="overflow-y: auto;">
                     <table>
                         <thead>
                             <tr>
-                                <th>Participant</th>
-                                <th>Routing Classification</th>
-                                <th>Sample Density</th>
-                                <th>Latency Impact</th>
+                                <th>Participants</th>
+                                <th>Records</th>
+                                <th>Observed mean duration</th>
+                                <th>Interpretation</th>
                             </tr>
                         </thead>
                         <tbody>
                             <tr>
-                                <td><strong>2 – 3 Nodes</strong></td>
-                                <td>Direct Bilateral Correspondent Corridor</td>
-                                <td>High (N &gt; 5M)</td>
-                                <td>Optimal speed; minimal handoff friction.</td>
+                                <td><strong>2</strong></td>
+                                <td>6,323,280</td>
+                                <td>663 seconds</td>
+                                <td>Largest group; baseline</td>
                             </tr>
                             <tr>
-                                <td><strong>4 – 8 Nodes</strong></td>
-                                <td>Standard Multi-Hop Intermediary Chain</td>
-                                <td>Moderate (N &gt; 10k)</td>
-                                <td>Linear duration scaling due to compliance checks.</td>
+                                <td><strong>3</strong></td>
+                                <td>2,324,319</td>
+                                <td>841 seconds</td>
+                                <td>Higher mean than 2</td>
                             </tr>
                             <tr>
-                                <td><strong>9 – 14 Nodes</strong></td>
-                                <td>Complex Multi-Tiered / Sparse Tail</td>
-                                <td>Low (N &lt; 300)</td>
-                                <td>Heightened queuing delays and survivorship bias.</td>
+                                <td><strong>4–8</strong></td>
+                                <td>1,343,204</td>
+                                <td>Mean rises from 1,042 to 1,834 seconds</td>
+                                <td>Smaller samples as count rises</td>
+                            </tr>
+                            <tr>
+                                <td><strong>9–14</strong></td>
+                                <td>9,176</td>
+                                <td>Mean generally rises; sparse tail</td>
+                                <td>Interpret cautiously</td>
                             </tr>
                         </tbody>
                     </table>
@@ -286,38 +293,30 @@
 
             <!-- Comprehensive Executive Analytical Brief -->
             <div class="card-box" style="flex: 1.65;">
-                <div class="section-title">Executive Analytical Brief & Strategic Business Rules</div>
+                <div class="section-title">Finding, plausible explanation, and limitation</div>
                 <div class="insights-content">
                     <div class="insight-section">
-                        <h4>🎯 1. Core Economic Finding & The Inverse Volume-Duration Tradeoff</h4>
-                        <!-- <p>Cross-referencing transaction volume density against routing path length uncovers a powerful inverse relationship across the global payment network:</p> -->
+                        <h4>1. Tested question and observed pattern</h4>
                         <ul>
-                            <li><strong>High Liquidity / Low Latency (Nodes 2–3):</strong> Over 90% of all institutional volume flows through direct bilateral corridors, boasting the fastest settlement times with minimal intermediary handoffs.</li>
-                            <li><strong>Low Liquidity / High Latency (Nodes 8+):</strong> As paths extend beyond 8 hops, volume drops off exponentially while settlement duration compounds dramatically.</li>
+                            <li>Question: Does average recorded duration differ by route participant count?</li>
+                            <li>Mean duration increases from 663 seconds at 2 participants to 841 at 3 and 1,042 at 4.</li>
+                            <li>Most records have 2–3 participants; observations become much less common as participant count rises.</li>
                         </ul>
                     </div>
 
                     <div class="insight-section">
-                        <h4>🏛️ 2. Nostro/Vostro Ledger Mechanics & Intermediary Friction</h4>
-                        <!--<p>Systematic upward scaling of settlement duration per added node is driven by foundational institutional constraints:</p>-->
-                        <ul>
-                            <li><strong>Reciprocal Account Overhead:</strong> Each intermediary bank requires independent posting across bilateral nostro/vostro accounts, creating multi-currency reconciliation lag.</li>
-                            <li><strong>Sequential AML Screening:</strong> Anti-Money Laundering (AML) and sanctions checks execute in series at each hop. A manual review at a single node stalls the entire chain.</li>
-                            <li><strong>Cross-Jurisdictional Time Zones:</strong> Multi-tiered paths span disparate regions, forcing payment instructions into overnight batch-clearing queues.</li>
-                        </ul>
+                        <h4>2. Plausible business interpretation</h4>
+                        <p>Within Indirect routes, mean duration rises about 202 seconds from 3 to 4 participants; within Covered routes it rises about 192 seconds. At 3 participants, Covered has a lower mean than Indirect (810 vs 845 seconds) but a higher median (288 vs 87 seconds). These patterns are consistent with longer routes taking more time, but the mean/median reversal does not support a single fixed Covered-settlement overhead.</p>
                     </div>
 
                     <div class="insight-section">
-                        <h4>⚠️ 3. The Survivorship Bias & Sparse Tail Anomaly (Nodes 13–14)</h4>
-                        <p>In the tail end of the routing distribution, volume drops to near zero ($N < 10$), yet mean duration exhibits an unexpected structural flattening. This is a textbook manifestation of <strong>survivorship bias</strong>: payments through 13–14 intermediaries normally time out or fail compliance, meaning the few survivors are elite, pre-cleared institutional test loops.</p>
+                        <h4>3. Limitation</h4>
+                        <p>There are 91 records with 13 participants and 43 with 14. Only 21 records have 15 or more participants, spread across groups up to 22. The duration chart focuses on groups 2–14; sparse-tail averages are unstable. Do not infer survivorship bias, failure, compliance outcomes, or liquidity lockup from these fields.</p>
                     </div>
 
                     <div class="insight-section">
-                        <h4>🚀 4. Strategic Business Recommendations for SWIFT</h4>
-                        <ul>
-                            <li><strong>Direct Multi-Currency Corridor Hubs:</strong> Establish bilateral liquidity pools to eliminate currency-bridging intermediary hops, slashing participant counts from 6–8 nodes down to the optimal 2–3 node baseline while freeing trapped nostro capital.</li>
-                            <li><strong>SWIFT gpi Smart Pre-Validation:</strong> Equip routing engines with predictive algorithms to automatically block multi-hop pathways exceeding 4 nodes and reroute transactions through direct correspondent ties.</li>
-                        </ul>
+                        <h4>4. Reconstructed rule vs baseline</h4>
+                        <p>For recorded routes, mean <code>TOTAL_DURATION</code> is 663 seconds at 2 participants, 841 at 3, and 1,042 at 4. The pooled 2-to-4 difference is 379 seconds. Within-type 3-to-4 differences are 192–202 seconds, but currency, party mix, and long-duration outliers remain uncontrolled; this is descriptive, not a causal per-hop delay.</p>
                     </div>
                 </div>
             </div>
@@ -327,5 +326,6 @@
     </div>
 </div>
 
+<script src="./dashboard_nav.js"></script>
 </body>
 </html>
