@@ -63,14 +63,12 @@
     }
     .card strong { display: block; margin-bottom: 5px; color: var(--green); font-size: 17px; }
     .card span { color: var(--muted); font-size: 14px; }
-    .panel, .insight {
+    .insight {
       padding: 18px;
       border: 1px solid var(--line);
       border-radius: 10px;
       background: var(--paper);
     }
-    .panel ul { margin: 0; padding-left: 20px; }
-    .panel li + li { margin-top: 6px; }
     .insights { display: grid; grid-template-columns: repeat(auto-fit, minmax(245px, 1fr)); gap: 14px; }
     .insight strong { display: block; margin-bottom: 5px; color: var(--green); }
     .insight p { margin: 0; color: var(--muted); font-size: 14px; }
@@ -86,8 +84,6 @@
       text-transform: uppercase;
       letter-spacing: .04em;
     }
-    code { overflow-wrap: anywhere; }
-    footer { margin-top: 30px; color: var(--muted); font-size: 13px; }
     @media (max-width: 600px) { body { padding: 14px; } header { padding: 20px; } }
   </style>
 </head>
@@ -99,16 +95,6 @@
   </header>
 
   <p class="notice"><strong>Interpretation:</strong> The competition dataset is synthetic. Values describe this dataset, not actual SWIFT network activity. Findings are associations unless the analysis establishes otherwise.</p>
-
-  <h2>Competition submission checklist</h2>
-  <section class="panel">
-    <ul>
-      <li>Submit 5–15 feature-group dashboards and a 10–20-slide PDF presentation.</li>
-      <li>Use the supplied dataset as the primary evidence; external data must not replace it as the primary analysis source.</li>
-      <li>Explain the method, sample size, units, and evidence behind each major finding.</li>
-      <li>AI assistance is allowed, but entrants should understand and be able to explain their analysis.</li>
-    </ul>
-  </section>
 
   <h2>Dashboards grouped by feature type</h2>
   <h3>Routing and message paths</h3>
@@ -145,14 +131,6 @@
     <article class="insight"><strong>Anomaly labels</strong><p>7,006 records (0.0701%) carry one of the analyzed anomaly labels. Normalized payment amounts are not confirmed losses or fraud outcomes.</p></article>
   </section>
 
-  <h2>Rebuild charts from your local CSV</h2>
-  <p>Run these from PowerShell in this project folder, replacing the example with your dataset path:</p>
-  <p><code>py .\generate_verified_charts.py "C:\path\to\swift_umdac_datathon_2026_fictitious_payment_data.csv"</code></p>
-  <p><code>py .\generate_dashboards9_10.py "C:\path\to\swift_umdac_datathon_2026_fictitious_payment_data.csv"</code></p>
-  <p><code>py .\chart_4.py "C:\path\to\swift_umdac_datathon_2026_fictitious_payment_data.csv"</code></p>
-  <p><code>py .\chart_8.py "C:\path\to\swift_umdac_datathon_2026_fictitious_payment_data.csv"</code></p>
-
-  <footer>For judging readiness, each feature page should state its testable question, reconstructed rule, comparison baseline, scope/sample size, method, and uncertainty. Dashboard comparisons describe this synthetic dataset; they do not establish operational causes or interventions. Check chart loading and print each feature dashboard to PDF before submission.</footer>
 </main>
 </body>
 </html>
