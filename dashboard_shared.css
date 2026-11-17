@@ -407,4 +407,174 @@ body[data-dashboard="5"] .chart-panel img {
     padding: 6px 7px;
     font-size: 12px;
   }
+
+}
+
+@page {
+  size: A3 landscape;
+  margin: 4mm;
+}
+
+@media print {
+  html,
+  body {
+    height: auto !important;
+    min-height: 0 !important;
+    overflow: visible !important;
+  }
+
+  body {
+    padding: 0 !important;
+    background: #fff !important;
+  }
+
+  .dashboard-nav {
+    display: none !important;
+  }
+
+  body main,
+  body .dashboard,
+  body .dashboard-wrapper,
+  body .slide {
+    width: 100% !important;
+    max-width: none !important;
+    height: auto !important;
+    min-height: 0 !important;
+    margin: 0 !important;
+    zoom: 1 !important;
+  }
+
+  body :is(.main, .main-grid) {
+    height: auto !important;
+    min-height: 0 !important;
+    overflow: visible !important;
+  }
+
+  body :is(.charts-stack, .left-column, .right-column, .panel, .card-box, .info-panel, .chart-panel, .chart-widget, .insights-content, .panel-content) {
+    height: auto !important;
+    min-height: 0 !important;
+    overflow: visible !important;
+  }
+
+  body .chart-widget {
+    min-height: 0 !important;
+  }
+
+  body :is(.chart-widget img, .chart-panel img, .chart img, figure img, .chart-container img) {
+    max-height: 28vh !important;
+  }
+
+  body[data-dashboard="5"] .chart-panel img {
+    max-height: 23vh !important;
+  }
+
+  body[data-dashboard="5"] .dashboard {
+    gap: 4px !important;
+    grid-template-rows: auto auto minmax(0, 1fr) auto !important;
+  }
+
+  body[data-dashboard="5"] .panel {
+    padding: 5px 7px !important;
+  }
+
+  body[data-dashboard="5"] .panel h2 {
+    margin: 0 0 3px !important;
+    padding-bottom: 2px !important;
+  }
+
+  body[data-dashboard="5"] .table-panel,
+  body[data-dashboard="5"] .table-scroll {
+    height: auto !important;
+    max-height: none !important;
+    overflow: visible !important;
+  }
+
+  body[data-dashboard="5"] .table-scroll {
+    flex: 0 0 auto !important;
+  }
+
+  body[data-dashboard="5"] :is(.item, .recommendation) {
+    padding-top: 1px !important;
+    padding-bottom: 2px !important;
+    margin-bottom: 2px !important;
+  }
+
+  body[data-dashboard="5"] :is(.brief p, .item p, .recommendation p) {
+    font-size: 9.5px !important;
+    line-height: 1.16 !important;
+  }
+
+  body[data-dashboard="9"] .charts {
+    gap: 8px !important;
+  }
+
+  body[data-dashboard="9"] .charts figure {
+    padding: 5px !important;
+  }
+
+  body[data-dashboard="9"] .charts figure img {
+    max-height: 25vh !important;
+  }
+
+  body[data-dashboard="9"] .table-wrap {
+    max-height: none !important;
+    overflow: visible !important;
+  }
+
+  body[data-dashboard="9"] .content {
+    gap: 8px !important;
+  }
+
+  body[data-dashboard="9"] .card {
+    padding: 8px !important;
+  }
+
+  body[data-dashboard="9"] :is(th, td) {
+    padding: 2px 4px !important;
+  }
+
+  body[data-dashboard="9"] table {
+    font-size: 9px !important;
+    line-height: 1.1 !important;
+  }
+
+  body[data-dashboard="9"] h2 {
+    margin: 12px 0 6px !important;
+  }
+
+  body :is(p, li, td, dd, label, .panel-content, .insight-section ul) {
+    font-size: 10.5px !important;
+    line-height: 1.25 !important;
+  }
+
+  body :is(th, small, figcaption, caption, footer, .note, .kpi-label, .kpi-note, .metric-card span, .stat span, .tag, .badge, .mini-tag, .header-tag, .panel-heading, .section-title, .table-description) {
+    font-size: 8.5px !important;
+    line-height: 1.15 !important;
+  }
+
+  body h1,
+  .dashboard-header h1 {
+    font-size: 20px !important;
+    line-height: 1.15 !important;
+  }
+
+  body h2 {
+    font-size: 15px !important;
+    line-height: 1.15 !important;
+  }
+
+  body h3 {
+    font-size: 12px !important;
+    line-height: 1.15 !important;
+  }
+
+  body h4 {
+    font-size: 11px !important;
+    line-height: 1.15 !important;
+  }
+
+  * {
+    print-color-adjust: exact !important;
+    -webkit-print-color-adjust: exact !important;
+  }
 }
