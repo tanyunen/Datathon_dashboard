@@ -1,0 +1,168 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Dashboard #13 | Intermediary banks and payment speed</title><style>
+:root{font-family:Inter,Arial,sans-serif;color:#133a2a;background:#dcebe1}
+*{box-sizing:border-box}
+body{margin:0;min-height:100vh;display:grid;place-items:center}
+.slide{width:min(100vw,177.7777vh);aspect-ratio:16/9;container-type:inline-size;background:#eff7ef}
+.canvas{height:56.25cqw;padding:1.8cqw;display:grid;grid-template-rows:auto minmax(0,1fr) auto;gap:1.03cqw;font-size:1.04cqw;line-height:1.34}
+h1,h2,h3,p{margin:0}
+header{background:#103e2d;color:#fff;border-radius:.95cqw;padding:1.2cqw 1.55cqw;display:flex;justify-content:space-between;align-items:center;gap:1cqw}
+.eyebrow{font-size:.72cqw;letter-spacing:.17em;text-transform:uppercase;font-weight:700;color:#b8e8c4}
+h1{font-size:2.65cqw;letter-spacing:-.08cqw;line-height:1.06;margin:.26cqw 0 .4cqw}
+header p{color:#e0f4e4}
+.hero{border-left:1px solid #6d9b84;padding-left:1.45cqw;flex:0 0 19cqw}
+.hero strong{display:block;font-size:2.8cqw;line-height:.98;color:#c8f4b7}.hero span{font-size:.94cqw}
+.charts{display:grid;grid-template-columns:.91fr 1.09fr;gap:1.03cqw;min-height:0}
+.panel{background:#fff;border:1px solid #cddfd1;border-radius:.95cqw;padding:1.17cqw;min-width:0;display:flex;flex-direction:column}
+h2{font-size:1.54cqw;letter-spacing:-.035em;line-height:1.13;margin-bottom:.33cqw}
+.sub{color:#476455;font-size:.9cqw}
+.ranking{margin-top:.95cqw;display:grid;flex:1;align-content:space-evenly;gap:.39cqw}
+.rank-row{display:grid;grid-template-columns:1.55cqw 6.5cqw minmax(0,1fr) 5cqw 3.7cqw;align-items:center;gap:.48cqw;font-variant-numeric:tabular-nums}
+.rank-row strong,.rank-row .share,.rank-row.chart-head span:nth-last-child(-n+2){text-align:right}
+.rank{color:#567568;font-size:.82cqw}.share{color:#365e4b}
+code{font:650 .99cqw ui-monospace,Consolas,monospace}
+.track{height:.77cqw;border-radius:.18cqw;position:relative;background:repeating-linear-gradient(90deg,#e8f2e9 0%,#e8f2e9 calc(50% - 1px),#cadfd0 calc(50% - 1px),#cadfd0 50%);box-shadow:inset -1px 0 #cadfd0}
+.track i{height:100%;display:block;border-radius:.16cqw;background:#91bea1}
+.track .bank-1,.swatch{background:#18724d}.track .bank-2{background:#69a282}
+.track em{position:absolute;top:-.15cqw;bottom:-.15cqw;width:.16cqw;background:#183d2e;transform:translateX(-50%)}
+.axis{font-size:.72cqw;color:#466655}.axis div{display:flex;justify-content:space-between}.axis span{white-space:nowrap}
+.callout{background:#e4f3e4;border-left:.26cqw solid #258259;border-radius:.35cqw;padding:.72cqw .89cqw;margin-top:.75cqw}
+.callout strong{font-size:1.13cqw}.callout p,.footnote{font-size:.84cqw;color:#486558}.footnote{margin-top:.53cqw}
+.corridors{flex:1;display:grid;grid-template-rows:1fr 1fr;gap:.54cqw;margin-top:.59cqw}
+.corridor{background:#f1f7f0;border:1px solid #dce9dd;border-radius:.62cqw;padding:.5cqw .69cqw;display:grid;gap:.13cqw;align-content:space-between}
+.corridor-head{display:flex;align-items:center;justify-content:space-between;gap:.4cqw}
+h3{font-size:1.22cqw}h3 span{font-size:.84cqw;color:#456757;font-weight:500}
+.corridor-head b{background:#d9eedb;color:#175039;border-radius:.28cqw;padding:.17cqw .43cqw;font-size:.8cqw}
+.endpoints code{font-size:.84cqw;color:#476455}
+.route-row{display:grid;grid-template-columns:7.15cqw minmax(0,1fr) 5.5cqw 4.55cqw;align-items:center;gap:.48cqw;font-size:.9cqw;text-align:right;font-variant-numeric:tabular-nums}
+.route-row>span:first-child,.route-row>span:nth-child(2){text-align:left}
+.via{display:flex;align-items:baseline;flex-wrap:wrap;gap:.42cqw}.via code{font-size:.82cqw}.via small{font-size:.68cqw;color:#4e6d5c}
+.chart-head{font-size:.72cqw;color:#476455;font-weight:700}
+.route-row.axis{font-size:.68cqw}
+.case-note{font-size:.79cqw;color:#355744}.tail{color:#355744}
+footer{background:#d9eddf;border-radius:.7cqw;padding:.68cqw .96cqw;display:grid;grid-template-columns:1fr 1fr;gap:1.3cqw;font-size:.84cqw}
+footer b{display:block;font-size:.92cqw;margin-bottom:.14cqw}
+@page{size:13.33333in 7.5in;margin:0}
+@media print{*{print-color-adjust:exact;-webkit-print-color-adjust:exact}body{display:block;min-height:0}.slide{width:13.333in}}
+
+:root{background:#e9efeb}
+.slide{background:#fff}
+.canvas{padding:.95cqw;gap:.72cqw;grid-template-rows:auto auto minmax(0,1fr) auto auto}
+header{background:linear-gradient(110deg,#008255,#006049);padding:.74cqw 1.15cqw;border-radius:.52cqw}
+h1{font-size:1.67cqw;letter-spacing:-.035cqw;margin:0 0 .24cqw}
+header p{font-size:.73cqw;letter-spacing:.09em;font-weight:700;text-transform:uppercase}
+.badge{background:#fff;color:#075c43;border:1px solid #b5dcb8;border-radius:.35cqw;padding:.39cqw .75cqw;font-size:.84cqw;font-weight:800;white-space:nowrap}
+.kpis{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:.72cqw}
+.kpi,.panel,.details{border:1px solid #d4e4db;border-radius:.52cqw;box-shadow:0 .11cqw .28cqw #0d4f2a10}
+.kpi{padding:.56cqw .77cqw;border-left:.22cqw solid #188253}.kpi span,.kpi small{display:block;color:#4b685a;font-size:.74cqw}.kpi span{text-transform:uppercase;font-weight:750}.kpi b{display:block;font-size:1.42cqw;line-height:1.15;margin:.14cqw 0;color:#07583f}
+.charts{grid-template-columns:1fr 1fr;gap:.72cqw}
+.panel{padding:.71cqw .85cqw}
+h2{font-size:1.15cqw;margin-bottom:.2cqw}
+.sub{font-size:.79cqw}.ranking{margin-top:.39cqw;gap:.12cqw}
+.callout{padding:.34cqw .56cqw;margin-top:.32cqw}.callout strong{font-size:.85cqw}.callout p,.footnote{font-size:.7cqw}.footnote{margin-top:.28cqw}
+.corridors{gap:.29cqw;margin-top:.32cqw}.corridor{padding:.26cqw .5cqw;gap:.07cqw}.corridor-head h3{font-size:.91cqw}.corridor-head b{padding:.11cqw .32cqw}.track{height:.6cqw}.case-note{font-size:.68cqw}.route-row{font-size:.78cqw}.chart-head,.route-row.axis{font-size:.65cqw}
+.lower{display:grid;grid-template-columns:1.1fr 1fr;gap:.72cqw;align-items:start}
+.lower h2{margin:0 0 .32cqw}
+.details{padding:.62cqw .76cqw;font-size:.78cqw}
+.details h3{font-size:.88cqw;margin-bottom:.12cqw;color:#075c43}.details section+section{margin-top:.35cqw}
+.details .application{background:#e9f4e9;border-left:.18cqw solid #41915f;padding:.32cqw .51cqw;border-radius:.24cqw;margin-top:.45cqw}
+table{border-collapse:collapse;width:100%;font-variant-numeric:tabular-nums}
+th,td{padding:.37cqw .36cqw;border-bottom:1px solid #d9e9df;text-align:left;white-space:nowrap}
+th{background:#e3f1e7;color:#145d45;font-size:.72cqw}
+th:nth-child(n+3),td:nth-child(n+3){text-align:right}
+td code{font-size:.76cqw}
+.source{color:#466655;font-size:.65cqw}
+</style></head>
+<body><main class="slide"><div class="canvas">
+<header><div><h1>SWIFT Datathon 2026 — Intermediary Banks and Payment Speed</h1><p>Intermediary usage across the dataset and matched timing by bank corridor</p></div><strong class="badge">DASHBOARD #13</strong></header>
+<section class="kpis" aria-label="Key findings">
+<div class="kpi"><span>Eligible payments</span><b>3,224,782</b><small>Complete routes with 3+ participants</small></div>
+<div class="kpi"><span>Most-used intermediary</span><b>0309CHZ0</b><small>162,184 payments · 5.03% of eligible payments</small></div>
+<div class="kpi"><span>Matched EUR corridor</span><b>94 s lower median</b><small>Via 0309CHZ0 · 256 payments</small></div>
+<div class="kpi"><span>Matched MYR corridor</span><b>33 s on both routes</b><small>Equal medians · 240 payments</small></div>
+</section>
+<div class="charts">
+  <section class="panel">
+    <h2>Most-used intermediary banks</h2>
+    <p class="sub">Top five by payment count · 3,224,782 eligible payments</p>
+    <div class="ranking">
+      <div class="rank-row chart-head"><span>Rank</span><span>BIC8</span><span>Payments</span><span>Count</span><span>Share</span></div>
+      <div class="rank-row">
+      <span class="rank">01</span><code>0309CHZ0</code>
+      <div class="track" aria-hidden="true"><i class="bank-1" style="width:90.10222%"></i></div>
+      <strong>162,184</strong><span class="share">5.03%</span>
+    </div><div class="rank-row">
+      <span class="rank">02</span><code>0004IMD0</code>
+      <div class="track" aria-hidden="true"><i class="bank-2" style="width:66.57000%"></i></div>
+      <strong>119,826</strong><span class="share">3.72%</span>
+    </div><div class="rank-row">
+      <span class="rank">03</span><code>0085BEB0</code>
+      <div class="track" aria-hidden="true"><i class="bank-3" style="width:56.27278%"></i></div>
+      <strong>101,291</strong><span class="share">3.14%</span>
+    </div><div class="rank-row">
+      <span class="rank">04</span><code>0175DEF0</code>
+      <div class="track" aria-hidden="true"><i class="bank-4" style="width:53.73167%"></i></div>
+      <strong>96,717</strong><span class="share">3.00%</span>
+    </div><div class="rank-row">
+      <span class="rank">05</span><code>0026FIH0</code>
+      <div class="track" aria-hidden="true"><i class="bank-5" style="width:48.57389%"></i></div>
+      <strong>87,433</strong><span class="share">2.71%</span>
+    </div>
+      <div class="rank-row axis"><span></span><span></span><div><span>0</span><span>90k</span><span>180k</span></div></div>
+    </div>
+    <div class="callout"><strong>0309CHZ0 ranked first or tied first in 139 of 154 currencies</strong><p>It appeared in 4.93% of eligible EUR payments and 5.05% of eligible MYR payments.</p></div>
+    <p class="footnote">Share uses all eligible complete routes with 3+ participants. Each payment counts once per intermediary.</p>
+  </section>
+  <section class="panel">
+    <h2>End-to-end timing via the top two</h2>
+    <p class="sub">Each case matches bank endpoints, currency, indirect payment type, three participants and two FX conversions.</p>
+    <div class="corridors"><section class="corridor" aria-label="EUR matched comparison">
+      <div class="corridor-head"><h3>EUR <span>· 256 payments</span></h3><b>94 s lower median</b></div>
+      <p class="endpoints"><code>0001MQM0 → 0009TNT0</code></p>
+      <div class="route-row chart-head"><span>Via BIC8</span><span>End-to-end time</span><span>Median</span><span>P90</span></div>
+      <div class="route-row">
+        <span class="via"><code>0309CHZ0</code><small>n = 136</small></span>
+        <div class="track" aria-hidden="true"><i class="bank-1" style="width:89.05556%"></i><em style="left:89.63889%"></em></div>
+        <strong>26m 43s</strong><span class="tail">1613.5s</span>
+        </div><div class="route-row">
+        <span class="via"><code>0004IMD0</code><small>n = 120</small></span>
+        <div class="track" aria-hidden="true"><i class="bank-2" style="width:94.27778%"></i><em style="left:95.00000%"></em></div>
+        <strong>28m 17s</strong><span class="tail">1710s</span>
+        </div>
+      <div class="route-row axis"><span></span><div><span>0</span><span>15 min</span><span>30 min</span></div></div>
+      <p class="case-note">Median gap by period · 94 s early and 93.5 s late.</p>
+    </section><section class="corridor" aria-label="MYR matched comparison">
+      <div class="corridor-head"><h3>MYR <span>· 240 payments</span></h3><b>Equal medians</b></div>
+      <p class="endpoints"><code>0032MYK0 → 0010ALT0</code></p>
+      <div class="route-row chart-head"><span>Via BIC8</span><span>End-to-end time</span><span>Median</span><span>P90</span></div>
+      <div class="route-row">
+        <span class="via"><code>0309CHZ0</code><small>n = 130</small></span>
+        <div class="track" aria-hidden="true"><i class="bank-1" style="width:55.00000%"></i><em style="left:75.16667%"></em></div>
+        <strong>33s</strong><span class="tail">45.1s</span>
+        </div><div class="route-row">
+        <span class="via"><code>0004IMD0</code><small>n = 110</small></span>
+        <div class="track" aria-hidden="true"><i class="bank-2" style="width:55.00000%"></i><em style="left:75.00000%"></em></div>
+        <strong>33s</strong><span class="tail">45s</span>
+        </div>
+      <div class="route-row axis"><span></span><div><span>0</span><span>30 s</span><span>60 s</span></div></div>
+      <p class="case-note">Both routes had a 33 s median.</p>
+    </section></div>
+    <p class="footnote">Bars show medians. Vertical ticks show P90. Each corridor has its own time scale.</p>
+  </section>
+</div>
+
+<div class="lower">
+<section><h2>Matched routes and exact timings</h2><div class="details">
+<table aria-label="Matched payment routes and timing in seconds"><thead><tr><th>Currency</th><th>Full BIC8 path</th><th>Payments</th><th>Median (s)</th><th>P90 (s)</th></tr></thead><tbody><tr><td><b>EUR</b></td><td><code>0001MQM0 → 0309CHZ0 → 0009TNT0</code></td><td>136</td><td>1,603</td><td>1,613.5</td></tr><tr><td><b>EUR</b></td><td><code>0001MQM0 → 0004IMD0 → 0009TNT0</code></td><td>120</td><td>1,697</td><td>1,710.0</td></tr><tr><td><b>MYR</b></td><td><code>0032MYK0 → 0309CHZ0 → 0010ALT0</code></td><td>130</td><td>33</td><td>45.1</td></tr><tr><td><b>MYR</b></td><td><code>0032MYK0 → 0004IMD0 → 0010ALT0</code></td><td>110</td><td>33</td><td>45.0</td></tr></tbody></table>
+<p class="footnote">P90 is the 90th percentile of end-to-end time. The two matched cases cover 496 payments.</p>
+</div></section>
+<section><h2>Rule, method and analysis</h2><div class="details">
+<section><h3>Rule</h3><p>Count a payment once per distinct BIC8 found between the first and last banks in its path. Rank intermediaries by payment count. Divide each count by all eligible payments to obtain its share.</p></section>
+<section><h3>Method</h3><p>Keep complete paths whose BIC8 node count matches the recorded participant count. For timing, group by origin bank, destination bank, currency, payment type, participant count and FX conversion count. Compare the two most-used paths per group, with at least 100 payments per path. Two groups qualified.</p></section>
+<section><h3>Analysis</h3><p>On the EUR corridor, the path via <b>0309CHZ0</b> had a 94 s lower median and a 96.5 s lower P90. On the MYR corridor, both paths had a 33 s median. Each timing result describes the full path for its specific bank pair and payment profile.</p></section>
+<section class="application"><h3>Operational use</h3><p>If both EUR paths are available on comparable terms, pilot the route via 0309CHZ0 and monitor median and P90.</p></section>
+</div></section>
+</div>
+<p class="source">Source · SWIFT Datathon supplied dataset · Intermediary usage and matched BIC8 route results</p>
+</div></main></body></html>
