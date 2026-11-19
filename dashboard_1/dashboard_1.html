@@ -1,0 +1,332 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>SWIFT — Executive Intelligence Dashboard #1</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary-dark: #0f172a;
+            --mint-primary: #00875a;
+            --mint-dark: #006644;
+            --mint-light: #e6f4ea;
+            --mint-border: #34d399;
+            --bg-page: #f1f5f2;
+            --card-bg: #ffffff;
+            --text-main: #1e293b;
+            --text-muted: #475569;
+            --border: #cbd5e1;
+            --border-light: #e2e8f0;
+        }
+
+        html, body {
+            height: 100vh;
+            margin: 0;
+            padding: 8px;
+            overflow: hidden;
+            background-color: var(--bg-page);
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, Roboto, sans-serif;
+            color: var(--text-main);
+            -webkit-font-smoothing: antialiased;
+        }
+
+        .dashboard-wrapper {
+            width: 98vw;
+            max-width: 1750px;
+            height: 98vh;
+            margin: 0 auto;
+            display: grid;
+            grid-template-rows: auto auto 1fr;
+            gap: 10px;
+            box-sizing: border-box;
+        }
+
+        /* 1. Header with Mint Gradient Color Box */
+        .header-card {
+            background: linear-gradient(135deg, #00875a 0%, #006644 100%);
+            border-radius: 10px;
+            padding: 12px 22px;
+            border: 1px solid #005536;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 4px 12px rgba(0, 135, 90, 0.15);
+        }
+        .header-card h1 { margin: 0; font-size: 19px; font-weight: 800; color: #ffffff; letter-spacing: -0.3px; }
+        .header-card p { margin: 3px 0 0 0; font-size: 11.5px; color: #e2f8ed; text-transform: uppercase; font-weight: 600; letter-spacing: 0.5px; }
+        .badge { background: #ffffff; color: var(--mint-dark); border: 1px solid #a3e635; padding: 6px 14px; border-radius: 6px; font-size: 12px; font-weight: 800; text-transform: uppercase; letter-spacing: 0.5px; box-shadow: 0 2px 4px rgba(0,0,0,0.1); }
+
+        /* 2. Top Metric Cards Row */
+        .metrics-row {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 10px;
+        }
+        .metric-card {
+            background: linear-gradient(135deg, #ffffff 0%, #f0fdf4 100%);
+            padding: 10px 16px;
+            border-radius: 8px;
+            border: 1px solid var(--border);
+            border-left: 5px solid var(--mint-primary);
+            box-shadow: 0 2px 4px rgba(0,0,0,0.02);
+        }
+        .metric-card span {
+            display: block;
+            font-size: 11px;
+            font-weight: 700;
+            color: var(--text-muted);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-bottom: 2px;
+        }
+        .metric-card h3 {
+            margin: 0;
+            font-size: 15px;
+            font-weight: 800;
+            color: var(--primary-dark);
+        }
+
+        /* 3. Main 2-Column Split Grid */
+        .main-grid {
+            display: grid;
+            grid-template-columns: 1fr 1.25fr;
+            gap: 10px;
+            min-height: 0;
+            height: 100%;
+        }
+
+        /* Left Column: Charts Stack */
+        .charts-stack {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            min-height: 0;
+            height: 100%;
+        }
+        .chart-widget {
+            background: linear-gradient(135deg, #ffffff 0%, #f8fafc 100%);
+            border-radius: 8px;
+            padding: 8px;
+            border: 1px solid var(--border);
+            box-shadow: 0 2px 4px rgba(0,0,0,0.02);
+            flex: 1;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 0;
+            overflow: hidden;
+            border-top: 3px solid var(--mint-primary);
+        }
+        .chart-widget img {
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
+        }
+
+        /* Right Column */
+        .right-column {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            min-height: 0;
+            height: 100%;
+        }
+
+        /* Card Boxes */
+        .card-box {
+            background: linear-gradient(135deg, #ffffff 0%, #f4fbf7 100%);
+            border-radius: 8px;
+            border: 1px solid var(--border);
+            box-shadow: 0 2px 4px rgba(0,0,0,0.02);
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+            min-height: 0;
+        }
+        
+        .section-title {
+            background: linear-gradient(135deg, #e6f4ea 0%, #d1fae5 100%);
+            color: var(--mint-dark);
+            padding: 8px 14px;
+            font-size: 12px;
+            font-weight: 800;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            border-bottom: 2px solid var(--mint-border);
+        }
+
+        /* Table Styling */
+        table { width: 100%; border-collapse: collapse; font-size: 13px; }
+        th, td { padding: 7px 12px; border-bottom: 1px solid var(--border-light); text-align: left; }
+        th { color: var(--primary-dark); font-size: 11.5px; text-transform: uppercase; background: #f1f5f9; font-weight: 700; }
+        tr:nth-child(even) { background-color: rgba(240, 253, 244, 0.4); }
+        tr:last-child td { border-bottom: none; }
+
+        /* Full Detailed Insights Styling */
+        .insights-content {
+            padding: 12px 16px;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            overflow-y: auto;
+            flex: 1;
+            min-height: 0;
+            background: linear-gradient(180deg, #ffffff 0%, #f8fafc 100%);
+        }
+        .insight-section h4 {
+            margin: 0 0 3px 0;
+            color: var(--mint-primary);
+            font-size: 13px;
+            text-transform: uppercase;
+            font-weight: 800;
+            letter-spacing: 0.3px;
+        }
+        .insight-section p {
+            margin: 0 0 4px 0;
+            color: var(--text-main);
+            font-size: 13px;
+            line-height: 1.45;
+        }
+        .insight-section ul {
+            margin: 3px 0 0 16px;
+            padding: 0;
+            color: var(--text-main);
+            font-size: 13px;
+            line-height: 1.4;
+        }
+        .insight-section li {
+            margin-bottom: 3px;
+        }
+    </style>
+<link rel="stylesheet" href="./dashboard_shared.css">
+</head>
+<body data-dashboard="1" data-dashboard-root=".">
+
+<div class="dashboard-wrapper">
+    <!-- 1. Header with Gradient Color Box -->
+    <div class="header-card dashboard-header">
+        <div class="dashboard-header-content">
+            <h1>SWIFT Datathon 2026 — Route Participants &amp; Duration</h1>
+            <p>Route participants and recorded duration · 2 participants is the duration baseline</p>
+        </div>
+        <div class="badge dashboard-badge">Dashboard #1</div>
+    </div>
+
+    <!-- 2. Top Metric Cards Row -->
+    <div class="metrics-row">
+        <div class="metric-card">
+            <span>Participants 2–3</span>
+            <h3>8,647,599 records (86.5%)</h3>
+        </div>
+        <div class="metric-card">
+            <span>Baseline comparison</span>
+            <h3>2 participants: 663 seconds mean</h3>
+        </div>
+        <div class="metric-card">
+            <span>Largest route group</span>
+            <h3>2 participants: 6,323,280 records</h3>
+        </div>
+        <div class="metric-card">
+            <span>Sparse route tail</span>
+            <h3>13–14 participants: 134 records</h3>
+        </div>
+    </div>
+
+    <!-- 3. Main 2-Column Split Grid -->
+    <div class="main-grid">
+        
+        <!-- Left: dataset-derived charts -->
+        <div class="charts-stack">
+            <div class="chart-widget">
+                <img src="dashboard_routing_styled.png" alt="Mean observed duration by route participant count from 2 through 14">
+            </div>
+            <div class="chart-widget">
+                <img src="dashboard_distribution_styled.png" alt="Record count by participant count across all observed groups">
+            </div>
+        </div>
+
+        <!-- Right: Compact Table & Expanded Economic Brief -->
+        <div class="right-column">
+            
+            <!-- Performance Matrix Table -->
+            <div class="card-box" style="flex: 0.65;">
+                <div class="section-title">Participant-count groups and sample sizes</div>
+                <div style="overflow-y: auto;">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Participants</th>
+                                <th>Records</th>
+                                <th>Observed mean duration</th>
+                                <th>Interpretation</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td><strong>2</strong></td>
+                                <td>6,323,280</td>
+                                <td>663 seconds</td>
+                                <td>Largest group; baseline</td>
+                            </tr>
+                            <tr>
+                                <td><strong>3</strong></td>
+                                <td>2,324,319</td>
+                                <td>841 seconds</td>
+                                <td>Higher mean than 2</td>
+                            </tr>
+                            <tr>
+                                <td><strong>4–8</strong></td>
+                                <td>1,343,204</td>
+                                <td>Mean rises from 1,042 to 1,834 seconds</td>
+                                <td>Smaller samples as count rises</td>
+                            </tr>
+                            <tr>
+                                <td><strong>9–14</strong></td>
+                                <td>9,176</td>
+                                <td>Mean generally rises; sparse tail</td>
+                                <td>Interpret cautiously</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- Comprehensive Executive Analytical Brief -->
+            <div class="card-box" style="flex: 1.65;">
+                <div class="section-title">Finding, plausible explanation, and limitation</div>
+                <div class="insights-content">
+                    <div class="insight-section">
+                        <h4>1. Tested question and observed pattern</h4>
+                        <ul>
+                            <li>Question: Does average recorded duration differ by route participant count?</li>
+                            <li>Mean duration increases from 663 seconds at 2 participants to 841 at 3 and 1,042 at 4.</li>
+                            <li>Most records have 2–3 participants; observations become much less common as participant count rises.</li>
+                        </ul>
+                    </div>
+
+                    <div class="insight-section">
+                        <h4>2. Plausible business interpretation</h4>
+                        <p>Within Indirect routes, mean duration rises about 202 seconds from 3 to 4 participants; within Covered routes it rises about 192 seconds. At 3 participants, Covered has a lower mean than Indirect (810 vs 845 seconds) but a higher median (288 vs 87 seconds). These patterns are consistent with longer routes taking more time, but the mean/median reversal does not support a single fixed Covered-settlement overhead.</p>
+                    </div>
+
+                    <div class="insight-section">
+                        <h4>3. Limitation</h4>
+                        <p>There are 91 records with 13 participants and 43 with 14. Only 21 records have 15 or more participants, spread across groups up to 22. The duration chart focuses on groups 2–14; sparse-tail averages are unstable. Do not infer survivorship bias, failure, compliance outcomes, or liquidity lockup from these fields.</p>
+                    </div>
+
+                    <div class="insight-section">
+                        <h4>4. Reconstructed rule vs baseline</h4>
+                        <p>For recorded routes, mean <code>TOTAL_DURATION</code> is 663 seconds at 2 participants, 841 at 3, and 1,042 at 4. The pooled 2-to-4 difference is 379 seconds. Within-type 3-to-4 differences are 192–202 seconds, but currency, party mix, and long-duration outliers remain uncontrolled; this is descriptive, not a causal per-hop delay.</p>
+                        <p>Transaction frequency is heavily skewed toward simplicity; 86.5% of all records involve just 2 or 3 participants.</p>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+
+    </div>
+</div>
+
+<script src="./dashboard_nav.js"></script>
+</body>
+</html>

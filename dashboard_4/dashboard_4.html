@@ -1,0 +1,348 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Dashboard 4 | Party Types and Payment Amounts</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary-dark: #0f172a;
+            --mint-primary: #00875a;
+            --mint-dark: #006644;
+            --mint-light: #e6f4ea;
+            --mint-border: #34d399;
+            --bg-page: #f1f5f2;
+            --card-bg: #ffffff;
+            --text-main: #1e293b;
+            --text-muted: #475569;
+            --border: #cbd5e1;
+            --border-light: #e2e8f0;
+        }
+
+        html, body {
+            height: 100vh;
+            margin: 0;
+            padding: 8px;
+            overflow: hidden;
+            background: var(--bg-page);
+            color: var(--text-main);
+            font-family: Inter, Arial, sans-serif;
+        }
+
+        .dashboard-wrapper {
+            width: 98vw;
+            max-width: 1750px;
+            height: 98vh;
+            margin: auto;
+            display: grid;
+            grid-template-rows: auto auto 1fr;
+            gap: 10px;
+            box-sizing: border-box;
+        }
+
+        /* 1. Header */
+        .header-card {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 12px 22px;
+            border: 1px solid #005536;
+            border-radius: 10px;
+            color: white;
+            background: linear-gradient(135deg, #00875a, #006644);
+        }
+        .header-card h1 { margin: 0; font-size: 19px; font-weight: 800; color: #ffffff; letter-spacing: -0.3px; }
+        .header-card p { margin: 3px 0 0 0; font-size: 11.5px; color: #e2f8ed; text-transform: uppercase; font-weight: 600; letter-spacing: 0.5px; }
+        .badge { background: #ffffff; color: var(--mint-dark); border: 1px solid #a3e635; padding: 6px 14px; border-radius: 4px; font-size: 10px; font-weight: 800; text-transform: uppercase; letter-spacing: 0.5px; }
+
+        /* 2. Top Metric Cards Row */
+        .metrics-row {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 10px;
+        }
+        .metric-card {
+            background: linear-gradient(135deg, #ffffff 0%, #f0fdf4 100%);
+            padding: 10px 16px;
+            border-radius: 8px;
+            border: 1px solid var(--border);
+            border-left: 4px solid var(--mint-primary);
+            box-shadow: 0 2px 4px rgba(0,0,0,0.02);
+        }
+        .metric-card span {
+            display: block;
+            font-size: 11px;
+            font-weight: 700;
+            color: var(--text-muted);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-bottom: 2px;
+        }
+        .metric-card h3 {
+            margin: 0;
+            font-size: 15px;
+            font-weight: 800;
+            color: var(--primary-dark);
+        }
+
+        /* 3. Main 2-Column Split Grid */
+        .main-grid {
+            display: grid;
+            grid-template-columns: 1fr 1.25fr;
+            gap: 10px;
+            min-height: 0;
+            height: 100%;
+        }
+
+        /* Left Column: Charts Stack */
+        .charts-stack {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            min-height: 0;
+            height: 100%;
+        }
+        .chart-widget {
+            background: linear-gradient(135deg, #ffffff 0%, #f8fafc 100%);
+            border-radius: 8px;
+            padding: 8px;
+            border: 1px solid var(--border);
+            box-shadow: 0 1px 2px rgba(0,0,0,0.02);
+            flex: 1;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 0;
+            overflow: hidden;
+            border-top: 3px solid var(--mint-primary);
+        }
+        .chart-widget img {
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
+        }
+
+        /* Right Column */
+        .right-column {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            min-height: 0;
+            height: 100%;
+        }
+
+        .card-box {
+            background: linear-gradient(135deg, #ffffff 0%, #f4fbf7 100%);
+            border-radius: 8px;
+            border: 1px solid var(--border);
+            box-shadow: 0 2px 4px rgba(0,0,0,0.02);
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+            min-height: 0;
+        }
+        
+        .section-title {
+            background: linear-gradient(135deg, #e6f4ea 0%, #d1fae5 100%);
+            color: var(--mint-dark);
+            padding: 8px 14px;
+            font-size: 12px;
+            font-weight: 800;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            border-bottom: 2px solid var(--mint-border);
+        }
+
+        /* Table Styling */
+        table { width: 100%; border-collapse: collapse; font-size: 13px; }
+        th, td { padding: 7px 12px; border-bottom: 1px solid var(--border-light); text-align: left; }
+        th { color: var(--primary-dark); font-size: 10px; text-transform: uppercase; background: #f1f5f9; font-weight: 700; }
+        tr:nth-child(even) { background-color: rgba(240, 253, 244, 0.4); }
+        tr:last-child td { border-bottom: none; }
+
+        .insights-content {
+            padding: 12px 16px;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            overflow-y: auto;
+            flex: 1;
+            min-height: 0;
+            background: linear-gradient(180deg, #ffffff 0%, #f8fafc 100%);
+        }
+        .insight-section h4 {
+            margin: 0 0 3px 0;
+            color: var(--mint-primary);
+            font-size: 13px;
+            text-transform: uppercase;
+            font-weight: 800;
+        }
+        .insight-section p {
+            margin: 0 0 4px 0;
+            color: var(--text-main);
+            font-size: 13px;
+            line-height: 1.45;
+        }
+        .insight-section ul {
+            margin: 0 0 0 16px;
+            padding: 0;
+            font-size: 13px;
+            line-height: 1.4;
+        }
+        .rule-callout {
+            background: #f0fdf4;
+            border-left: 2px solid var(--mint-primary);
+            padding: 2px 5px;
+            margin: 1px 0;
+            border-radius: 0 3px 3px 0;
+            font-size: 10px;
+            color: #166534;
+        }
+
+        .badge-teal { background: #ccfbf1; color: #0f766e; padding: 1px 4px; border-radius: 3px; font-weight: 700; font-size: 10px; }
+        .badge-sky { background: #e0f2fe; color: #0369a1; padding: 1px 4px; border-radius: 3px; font-weight: 700; font-size: 10px; }
+        .badge-amber { background: #fef3c7; color: #92400e; padding: 1px 4px; border-radius: 3px; font-weight: 700; font-size: 8px; }
+
+    </style>
+<link rel="stylesheet" href="./dashboard_shared.css">
+</head>
+<body data-dashboard="4" data-dashboard-root=".">
+
+<div class="dashboard-wrapper">
+    <!-- 1. Header -->
+    <div class="header-card dashboard-header">
+        <div class="dashboard-header-content">
+            <h1>SWIFT Datathon 2026 — Party Types & Payment Amounts</h1>
+            <p>Party-type distribution and payment amounts · Consumer is the amount baseline</p>
+        </div>
+        <div class="badge dashboard-badge">Dashboard #4</div>
+    </div>
+
+    <!-- 2. Top Metric Cards Row -->
+    <div class="metrics-row">
+        <div class="metric-card">
+            <span>Total Dataset Volume</span>
+            <h3>10.00M Transactions</h3>
+        </div>
+        <div class="metric-card">
+            <span>Business Sender Share</span>
+            <h3>78.75% (7.87M Txns)</h3>
+        </div>
+        <div class="metric-card">
+            <span>Business Median Value</span>
+            <h3>$5,537.36 (7.17x vs Consumer)</h3>
+        </div>
+        <div class="metric-card">
+            <span>Dominant Party-Pair</span>
+            <h3>B → C (56.04% Volume)</h3>
+        </div>
+    </div>
+
+    <!-- 3. Main 2-Column Split Grid -->
+    <div class="main-grid">
+        
+        <!-- Left: Charts Stack -->
+        <div class="charts-stack">
+            <div class="chart-widget">
+                <img src="dashboard4_chart1_volume.png" alt="Transaction Volume & Median Amount by Sender Type">
+            </div>
+            <div class="chart-widget">
+                <img src="dashboard4_chart2_pairs.png" alt="Transaction Volume by Party Pair (B-B, B-C, C-B, C-C)">
+            </div>
+        </div>
+
+        <!-- Right: 3 Balanced Boxes -->
+        <div class="right-column">
+            
+            <!-- Box 1: Party-Pair Distribution Matrix -->
+            <div class="card-box" style="flex: 0.75;">
+                <div class="section-title">Granular Party-Pair Distribution & Share Matrix</div>
+                <div style="overflow-y: auto;">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Transaction Path</th>
+                                <th>Flow Description</th>
+                                <th>Transactions</th>
+                                <th>Share (%)</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td><strong>B → C</strong></td>
+                                <td>Business sender to consumer beneficiary</td>
+                                <td>5,603,692</td>
+                                <td><span class="badge-teal">56.04% (Dominant)</span></td>
+                            </tr>
+                            <tr>
+                                <td><strong>B → B</strong></td>
+                                <td>Business sender to business beneficiary</td>
+                                <td>2,270,945</td>
+                                <td><span class="badge-sky">22.71%</span></td>
+                            </tr>
+                            <tr>
+                                <td><strong>C → C</strong></td>
+                                <td>Consumer sender to consumer beneficiary</td>
+                                <td>1,514,758</td>
+                                <td><span class="badge-amber">15.15%</span></td>
+                            </tr>
+                            <tr>
+                                <td><strong>C → B</strong></td>
+                                <td>Consumer sender to business beneficiary</td>
+                                <td>610,605</td>
+                                <td>6.11%</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- Box 2: Executive Analytical Brief -->
+            <div class="card-box" style="flex: 1.31;">
+                <div class="section-title">Comprehensive Economic & Technical Analytical Brief</div>
+                <div class="insights-content">
+                    <div class="insight-section">
+                        <h4>1. Tested question and finding</h4>
+                        <p>Question: Do sender types differ in normalized payment amount? Business senders account for 7,874,637 of 10,000,000 records (78.75%) and have a $5,537.36 median versus $772.62 for Consumer senders (7.17×).</p>
+                    </div>
+                    <div class="insight-section">
+                        <h4>2. Party-pair finding</h4>
+                        <p>Business-to-Consumer (B → C) is the largest pair, with 5,603,692 records (56.04%). Median normalized amounts are $22,887.71 for B → B and $463.17 for C → C (about 49.4×). This descriptive contrast is not adjusted for currency or route and does not establish payment purpose; payroll or payout explanations cannot be confirmed here.</p>
+                    </div>
+                    <div class="insight-section">
+                        <h4>3. Reconstructed rule</h4>
+                        <div class="rule-callout">
+                            <strong>Reconstructed rule vs baseline:</strong> Among the 10 million records, Business senders (n=7,874,637) have a median normalized amount of $5,537.36 versus the Consumer baseline (n=2,125,363) at $772.62—7.17× higher. This is descriptive and does not define an operational hold or routing threshold.
+                        </div>
+                    </div>
+                    <div class="insight-section">
+                        <h4>4. Limitation and next question</h4>
+                        <p>The data does not establish payment purpose, account balances, batch schedules, or real-world liquidity demand. A useful next test is whether the sender-type amount difference persists within comparable currencies and routing types.</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 3. BOTTOM BOX: UPDATED TO MATCH THE REST OF THE STYLES -->
+    <div class="card-box" style="flex: 0.7;">
+        <div class="section-title">Evidence-led business questions</div>
+        <div class="insights-content">
+            <div class="insight-section">
+                <h4>1. Segment payment monitoring</h4>
+                <p>Compare payment amounts by sender type within the same currency and transaction type before designing different review thresholds.</p>
+            </div>
+            <div class="insight-section">
+                <h4>2. Validate payment purpose</h4>
+                <p>Use transaction-purpose data, if available and permitted, before attributing B → C payments to payroll, payouts, or other use cases.</p>
+            </div>
+        </div>
+    </div>
+
+</div>
+
+</div>
+
+</div>
+
+<script src="./dashboard_nav.js"></script>
+</body>
+</html>

@@ -1,0 +1,351 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Payment Anomalies Dashboard</title>
+  <style>
+    :root {
+      --primary-dark: #0f172a;
+      --mint-primary: #00875a;
+      --mint-dark: #006644;
+      --bg-page: #f1f5f2;
+      --card-bg: #ffffff;
+      --text-main: #1e293b;
+      --text-muted: #475569;
+      --border: #cbd5e1;
+      --border-light: #e2e8f0;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    html, body {
+      min-height: 100vh;
+      margin: 0;
+      padding: 12px;
+      background: var(--bg-page);
+      color: var(--text-main);
+      font-family: Inter, Arial, sans-serif;
+    }
+
+    .dashboard-container {
+      width: 100%;
+      max-width: 1750px;
+      margin: 0 auto;
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+    }
+
+    /* Header Banner */
+    .top-banner {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+      padding: 12px 22px;
+      border: 1px solid #005536;
+      border-radius: 10px;
+      color: #ffffff;
+      background: linear-gradient(135deg, var(--mint-primary), var(--mint-dark));
+    }
+
+    .banner-title h1 {
+      margin: 0;
+      font-size: 19px;
+      font-weight: 800;
+      color: #ffffff;
+      letter-spacing: -0.3px;
+    }
+
+    .banner-title p {
+      margin: 3px 0 0 0;
+      font-size: 11.5px;
+      color: #e2f8ed;
+      text-transform: uppercase;
+      font-weight: 600;
+      letter-spacing: 0.5px;
+    }
+
+    .banner-badge {
+      background: #ffffff;
+      color: var(--mint-dark);
+      border: 1px solid #a3e635;
+      padding: 6px 14px;
+      border-radius: 4px;
+      font-size: 10px;
+      font-weight: 800;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      white-space: nowrap;
+    }
+
+    /* Two-Column Main Layout */
+    .main-grid {
+      display: grid;
+      grid-template-columns: 1fr 1.05fr;
+      gap: 20px;
+      align-items: start;
+    }
+
+    .left-panel {
+      display: flex;
+      flex-direction: column;
+      justify-content: flex-start;
+    }
+
+    .left-panel img {
+      width: 100%;
+      height: auto;
+      border-radius: 10px;
+      display: block;
+      background: var(--card-bg);
+      border: 1px solid var(--border-light);
+    }
+
+    .right-panel {
+      display: flex;
+      flex-direction: column;
+      gap: 18px;
+    }
+
+    .card {
+      background-color: var(--card-bg);
+      border: 1px solid var(--border-light);
+      border-radius: 10px;
+      padding: 20px;
+    }
+
+    .card-header {
+      margin-bottom: 14px;
+    }
+
+    .card-header h2 {
+      font-size: 1.15rem;
+      color: #1f2937;
+      margin: 0 0 4px 0;
+    }
+
+    .card-header p {
+      font-size: 0.82rem;
+      color: #6b7280;
+      margin: 0;
+    }
+
+    /* Heatmap Table */
+    .table-wrapper {
+      overflow-x: auto;
+      border-radius: 6px;
+      border: 1px solid #e5e7eb;
+    }
+
+    table.heatmap-table {
+      width: 100%;
+      border-collapse: collapse;
+      text-align: center;
+    }
+
+    .heatmap-table thead th {
+      background-color: #e6f2ed;
+      padding: 12px 10px;
+      border-bottom: 1px solid #d1e3dc;
+    }
+
+    .heatmap-table thead th:first-child {
+      text-align: left;
+      color: #176b49;
+      font-size: 0.95rem;
+      padding-left: 14px;
+    }
+
+    .col-title {
+      font-size: 0.88rem;
+      font-weight: 700;
+      color: #1f2937;
+    }
+
+    .col-subtitle {
+      font-size: 0.75rem;
+      font-weight: 400;
+      color: #4b5563;
+      margin-top: 2px;
+    }
+
+    .heatmap-table tbody td {
+      padding: 12px 10px;
+      border-bottom: 1px solid #e5e7eb;
+    }
+
+    .heatmap-table tbody tr:last-child td {
+      border-bottom: none;
+    }
+
+    .heatmap-table tbody td:first-child {
+      text-align: left;
+      font-weight: 600;
+      font-size: 0.9rem;
+      background-color: #ffffff;
+      padding-left: 14px;
+      white-space: nowrap;
+    }
+
+    .metric-val {
+      font-size: 1.05rem;
+      font-weight: 700;
+    }
+
+    .metric-cases {
+      font-size: 0.75rem;
+      color: #4b5563;
+      margin-top: 2px;
+    }
+
+    /* Heatmap Colors */
+    .heat-0 { background-color: #f8faf9; }
+    .heat-1 { background-color: #eef6f2; }
+    .heat-2 { background-color: #e2f0e9; }
+    .heat-3 { background-color: #cbe5d8; }
+    .heat-4 { background-color: #93c9b1; }
+    .heat-5 { background-color: #7ebfa2; }
+
+    /* Analysis & Reconstructed Rule Card */
+    .analysis-list {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      font-size: 0.86rem;
+      line-height: 1.5;
+      color: #374151;
+    }
+
+    .analysis-list p {
+      margin: 0;
+    }
+
+    .analysis-list strong {
+      color: #111827;
+    }
+
+    .dashboard-footer {
+      font-size: 0.75rem;
+      color: #6b7280;
+    }
+
+    @media (max-width: 1024px) {
+      .main-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <div class="dashboard-container">
+    <!-- Top Header Banner -->
+    <header class="top-banner">
+      <div class="banner-title">
+        <h1>SWIFT Datathon 2026 - Payment anomalies by currency and account type</h1>
+        <p>Anomaly composition, observed rates and account patterns</p>
+      </div>
+      <div class="banner-badge">DASHBOARD #10</div>
+    </header>
+
+    <!-- Main Two-Column Content -->
+    <div class="main-grid">
+
+      <!-- Left Side: Currency Donuts Chart -->
+      <div class="left-panel">
+        <img src="currency_anomalies_slim.png" alt="Highest anomaly rates and counts among the four currencies">
+      </div>
+
+      <!-- Right Side: Table + Analysis Card -->
+      <div class="right-panel">
+
+        <!-- Top Right Card: Heatmap Table -->
+        <section class="card">
+          <div class="card-header">
+            <h2>Anomalies by sender &rarr; recipient</h2>
+            <p>Four currencies pooled &middot; 5,277,756 payments &middot; 3,571 labelled &middot; B = business &middot; C = consumer &middot; cases per 10,000 with counts below.</p>
+          </div>
+
+          <div class="table-wrapper">
+            <table class="heatmap-table">
+              <thead>
+                <tr>
+                  <th>Anomaly group</th>
+                  <th>
+                    <div class="col-title">B &rarr; B</div>
+                    <div class="col-subtitle">1,230,426 payments</div>
+                  </th>
+                  <th>
+                    <div class="col-title">B &rarr; C</div>
+                    <div class="col-subtitle">2,973,687 payments</div>
+                  </th>
+                  <th>
+                    <div class="col-title">C &rarr; B</div>
+                    <div class="col-subtitle">311,640 payments</div>
+                  </th>
+                  <th>
+                    <div class="col-title">C &rarr; C</div>
+                    <div class="col-subtitle">762,003 payments</div>
+                  </th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td>Romance scam</td>
+                  <td class="heat-0"><div class="metric-val">0.00</div><div class="metric-cases">0 cases</div></td>
+                  <td class="heat-0"><div class="metric-val">0.00</div><div class="metric-cases">0 cases</div></td>
+                  <td class="heat-4"><div class="metric-val">10.01</div><div class="metric-cases">312 cases</div></td>
+                  <td class="heat-5"><div class="metric-val">11.59</div><div class="metric-cases">883 cases</div></td>
+                </tr>
+                <tr>
+                  <td>CEO scam</td>
+                  <td class="heat-2"><div class="metric-val">1.09</div><div class="metric-cases">134 cases</div></td>
+                  <td class="heat-2"><div class="metric-val">1.14</div><div class="metric-cases">338 cases</div></td>
+                  <td class="heat-0"><div class="metric-val">0.00</div><div class="metric-cases">0 cases</div></td>
+                  <td class="heat-0"><div class="metric-val">0.00</div><div class="metric-cases">0 cases</div></td>
+                </tr>
+                <tr>
+                  <td>Account replacement scam</td>
+                  <td class="heat-1"><div class="metric-val">0.67</div><div class="metric-cases">83 cases</div></td>
+                  <td class="heat-1"><div class="metric-val">0.69</div><div class="metric-cases">204 cases</div></td>
+                  <td class="heat-1"><div class="metric-val">0.64</div><div class="metric-cases">20 cases</div></td>
+                  <td class="heat-1"><div class="metric-val">0.70</div><div class="metric-cases">53 cases</div></td>
+                </tr>
+                <tr>
+                  <td>Payment errors &amp; recalls</td>
+                  <td class="heat-3"><div class="metric-val">2.87</div><div class="metric-cases">353 cases</div></td>
+                  <td class="heat-3"><div class="metric-val">3.02</div><div class="metric-cases">898 cases</div></td>
+                  <td class="heat-3"><div class="metric-val">2.12</div><div class="metric-cases">66 cases</div></td>
+                  <td class="heat-3"><div class="metric-val">2.98</div><div class="metric-cases">227 cases</div></td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </section>
+
+        <!-- Bottom Right Card: Analysis & Reconstructed Rule -->
+        <section class="card">
+          <div class="card-header">
+            <h2>Analysis &amp; reconstructed rule</h2>
+          </div>
+          <div class="analysis-list">
+            <p><strong>Currency mix.</strong> Romance scams make up 95.33% of INR and 75.13% of CNY labels. Consumers sent all 855 of these cases. Fat-finger mistakes lead in USD and EUR, at 33.19% and 39.33%.</p>
+            <p><strong>Sender rule.</strong> All 1,195 romance-scam cases had consumer senders. All 472 CEO-scam cases had business senders. Account replacement appears in all four pairs.</p>
+            <p><strong>Recipient pattern.</strong> For CEO scams, B &rarr; C had 338 cases versus 134 for B &rarr; B, at 1.14 and 1.09 per 10,000. For romance scams, C &rarr; C and C &rarr; B rates were 11.59 and 10.01. In USD and EUR alone, these rates were 3.36 and 3.28.</p>
+          </div>
+        </section>
+
+      </div>
+    </div>
+
+    <footer class="dashboard-footer">
+      SWIFT Datathon &middot; Dashboard #10
+    </footer>
+  </div>
+
+</body>
+</html>

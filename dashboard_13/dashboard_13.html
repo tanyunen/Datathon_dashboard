@@ -1,0 +1,98 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Dashboard #13 | Intermediary banks and payment speed</title><style>
+:root { color-scheme: light; --ink:#153f32; --muted:#526b61; --green:#07583e; --mint:#e6f4ea; --line:#dce7e0; }
+      * { box-sizing:border-box; }
+      body { margin:0; padding:24px; background:#f1f5f2; color:var(--ink); font:15px/1.5 "Segoe UI",Arial,sans-serif; }
+      main { max-width:1500px; margin:auto; }
+      header { padding:22px 26px; border-radius:12px; color:#fff; background:linear-gradient(110deg,#087a50,#104b38); }
+      header .eyebrow { margin:0 0 4px; color:#d6f4e8; font-size:12px; font-weight:700; letter-spacing:.08em; text-transform:uppercase; }
+      h1 { margin:0; font-size:clamp(24px,3vw,34px); }
+      header p { margin:6px 0 0; color:#e4f8ee; }
+      header a { color:#fff; }
+      h2 { margin:26px 0 12px; color:var(--green); font-size:20px; }
+      .metrics { display:grid; grid-template-columns:repeat(4,minmax(0,1fr)); gap:12px; margin:14px 0; }
+      .metric,.card,figure { border:1px solid var(--line); border-radius:10px; background:#fff; box-shadow:0 2px 6px #153f320d; }
+      .metric { padding:14px; border-left:4px solid #168052; }
+      .metric span { display:block; color:var(--muted); font-size:12px; font-weight:700; text-transform:uppercase; }
+      .metric strong { display:block; margin-top:4px; color:var(--green); font-size:20px; line-height:1.25; }
+      .kpi-note {
+    font-size: 9px;
+    color: #526b61;
+    margin-top: 2px;
+}
+      .charts { display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:14px; }
+      figure { margin:0; padding:12px; }
+      figure img { display:block; width:100%; height:auto; }
+      figcaption { margin-top:8px; color:var(--muted); font-size:13px; }
+      .content { display:grid; grid-template-columns:minmax(0,1.2fr) minmax(300px,.8fr); gap:14px; align-items:start; }
+      .card { padding:16px; }
+      .table-wrap { max-height:620px; overflow:auto; }
+      table { width:100%; border-collapse:collapse; font-size:13px; }
+      th,td { padding:7px 8px; border-bottom:1px solid var(--line); text-align:left; white-space:nowrap; }
+      th { position:sticky; top:0; background:#e6f4ea; color:var(--green); }
+      .card h3 { margin:0 0 6px; color:var(--green); font-size:16px; }
+      .card p { margin:0 0 12px; }
+      .card p:last-child { margin-bottom:0; }
+      .note { padding:12px 14px; border-left:4px solid #d5a72d; border-radius:7px; background:#fffaf0; }
+      .note strong { color:#78350f; }
+      footer { margin:22px 0 4px; color:var(--muted); font-size:13px; }
+      @media(max-width:850px) { body{padding:14px}.metrics{grid-template-columns:repeat(2,minmax(0,1fr))}.charts,.content{grid-template-columns:1fr} }
+      @media(max-width:480px) { .metrics{grid-template-columns:1fr} header{padding:18px} }
+    </style>
+<link rel="stylesheet" href="./dashboard_shared.css">
+</head>
+<body data-dashboard="10" data-dashboard-root=".">
+<main>
+  <header class="dashboard-header">
+    <div class="dashboard-header-content">
+      <h1>SWIFT Datathon 2026 — Intermediary Banks and Payment Speed</h1>
+      <p>Intermediary usage across the dataset and matched timing by bank corridor</p>
+    </div>
+    <span class="dashboard-badge">Dashboard #13</span>
+  </header>
+  <section class="metrics" aria-label="Dashboard 11 key measures">
+    <div class="metric"><span>ELIGIBLE PAYMENTS</span><strong>3,224,782</strong><div class="kpi-note">
+                Complete routes with 3+ participants
+            </div></div>
+    <div class="metric"><span>MOST-USED INTERMEDIARY</span><strong>0309CHZ0</strong><div class="kpi-note">
+                162,184 payments · 5.03% of eligible payments
+            </div></div>
+    <div class="metric"><span>MATCHED EUR CORRIDOR</span><strong>94 s lower median</strong><div class="kpi-note">
+                Via 0309CHZ0 · 256 payments</div></div>
+    <div class="metric"><span>MATCHED MYR CORRIDOR</span><strong>33 s on both routes</strong><div class="kpi-note">
+                Equal medians · 240 payments</div></div>
+  </section>
+  <section class="charts" aria-label="Hourly anomaly rate and sample-size charts">
+    <figure>
+      <img src="intermediary_banks_chart.png" alt="Hourly anomaly-label rate divided by each transaction type's all-hour baseline. An index of 1 equals that type's baseline.">
+    </figure>
+    <figure>
+      <img src="corridor_timing_chart.png" alt="End-to-end timing for the top two corridors.">
+    </figure>
+  </section>
+  <h2>Matched routes and exact timings</h2>
+  <section class="content">
+    <div class="card">
+      <div class="table-wrap">
+        <table>
+          <thead><tr><th>Currency</th><th>Full BIC8 Path</th><th>Payments</th><th>Median (s)</th><th>P90 (s)</th></thead><tr></tr>
+          <tbody><tr><td>EUR</td><td>0001MQM0 → 0309CHZ0 → 0009TNT0</td><td>136</td><td>1,603</td><td>1,613.5</td></tr><tr><td>EUR</td><td>0001MQM0 → 0004IMD0 → 0009TNT0</td><td>120</td><td>1,697</td><td>1,710.0</td></tr><tr><td>MYR</td><td>0032MYK0 → 0309CHZ0 → 0010ALT0</td><td>130</td><td>33</td><td>45.1</td></tr><tr><td>MYR</td><td>0032MYK0 → 0004IMD0 → 0010ALT0</td><td>110</td><td>33</td><td>45.0</td></tr></tbody>
+            <p>P90 is the 90th percentile of end-to-end time. The two matched cases cover 496 payments.</p>
+        </table>
+      </div>
+    </div>
+    <aside class="card">
+      <h3>Rule, Method and Analysis</h3>
+      <p><strong>Rule:</strong> Count a payment once per distinct BIC8 found between the first and last banks in its path. Rank intermediaries by payment count. Divide each count by all eligible payments to obtain its share.</p>
+      <p><strong>Method:</strong> Keep complete paths whose BIC8 node count matches the recorded participant count. For timing, group by origin bank, destination bank, currency, payment type, participant count and FX conversion count. Compare the two most-used paths per group, with at least 100 payments per path. Two groups qualified.</p>
+      <h3>Analysis</h3>
+      <p>On the EUR corridor, the path via 0309CHZ0 had a 94 s lower median and a 96.5 s lower P90. On the MYR corridor, both paths had a 33 s median. Each timing result describes the full path for its specific bank pair and payment profile.</p>
+      <p class="note"><strong>Operational use:</strong> If both EUR paths are available on comparable terms, pilot the route via 0309CHZ0 and monitor median and P90.</p>
+    </aside>
+  </section>
+  <footer>Source: supplied fictitious payment dataset. Times are Asia/Kuala_Lumpur. Generated by generate_dashboards9_10.py. Rates are descriptive and apply only to this dataset.</footer>
+</main>
+<script src="./dashboard_nav.js"></script>
+</body>
+</html>

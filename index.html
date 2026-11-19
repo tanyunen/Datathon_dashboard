@@ -1,0 +1,168 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>SWIFT Datathon 2026 | Dashboard Hub</title>
+  <style>
+    :root {
+      color-scheme: light;
+      --ink: #153f32;
+      --muted: #526b61;
+      --green: #07583e;
+      --mint: #e6f4ea;
+      --line: #dce7e0;
+      --paper: #fff;
+      --page: #f1f5f2;
+    }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      padding: 28px;
+      background: var(--page);
+      color: var(--ink);
+      font: 16px/1.5 "Segoe UI", Arial, sans-serif;
+    }
+    main { max-width: 1120px; margin: auto; }
+    header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 20px;
+      padding: 28px;
+      border-radius: 14px;
+      color: white;
+      background: linear-gradient(110deg, #087a50, #104b38);
+    }
+    .header-copy { min-width: 0; }
+    header p { margin: 4px 0 0; color: #d6f4e8; }
+    h1 { margin: 0; font-family: "Segoe UI", Arial, sans-serif; font-size: clamp(22px, 2vw, 28px); font-weight: 800; line-height: 1.25; }
+    .pdf-button {
+      display: inline-flex;
+      flex: 0 0 auto;
+      min-height: 42px;
+      align-items: center;
+      justify-content: center;
+      padding: 9px 14px;
+      border: 1px solid #fff;
+      border-radius: 7px;
+      background: #fff;
+      color: var(--green);
+      font-weight: 700;
+      text-decoration: none;
+      white-space: nowrap;
+    }
+    .pdf-button:hover, .pdf-button:focus-visible {
+      outline: 3px solid #a3e6c6;
+      outline-offset: 2px;
+    }
+    h2 { margin: 28px 0 12px; color: var(--green); font-size: 20px; }
+    .notice {
+      margin: 18px 0;
+      padding: 14px 18px;
+      border-left: 5px solid #d5a72d;
+      border-radius: 7px;
+      background: #fffaf0;
+    }
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(245px, 1fr));
+      gap: 14px;
+    }
+    a.card {
+      display: block;
+      min-height: 145px;
+      padding: 18px;
+      border: 1px solid var(--line);
+      border-radius: 10px;
+      background: var(--mint);
+      color: inherit;
+      text-decoration: none;
+      box-shadow: 0 2px 6px #153f320d;
+    }
+    a.card:hover, a.card:focus-visible {
+      border-color: #168052;
+      outline: 2px solid #168052;
+      outline-offset: 2px;
+    }
+    .card strong { display: block; margin-bottom: 5px; color: var(--green); font-size: 17px; }
+    .card span { color: var(--muted); font-size: 14px; }
+    .insight {
+      padding: 18px;
+      border: 1px solid var(--line);
+      border-radius: 10px;
+      background: var(--paper);
+    }
+    .insights { display: grid; grid-template-columns: repeat(auto-fit, minmax(245px, 1fr)); gap: 14px; }
+    .insight strong { display: block; margin-bottom: 5px; color: var(--green); }
+    .insight p { margin: 0; color: var(--muted); font-size: 14px; }
+    .tag {
+      display: inline-block;
+      margin-bottom: 8px;
+      padding: 2px 8px;
+      border-radius: 999px;
+      background: var(--mint);
+      color: var(--green);
+      font-size: 11px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: .04em;
+    }
+    @media (max-width: 600px) {
+      body { padding: 14px; }
+      header { align-items: flex-start; flex-direction: column; padding: 20px; }
+    }
+  </style>
+</head>
+<body>
+<main>
+  <header>
+    <div class="header-copy">
+      <h1>SWIFT Datathon 2026</h1>
+      <p>Dashboard hub · Findings from the fictitious payment dataset</p>
+    </div>
+    <a class="pdf-button" href="print_all.html?print=1" title="Create one PDF with all 13 dashboards">Convert all to PDF</a>
+  </header>
+
+  <p class="notice"><strong>Interpretation:</strong> The competition dataset is synthetic. Values describe this dataset, not actual SWIFT network activity. Findings are associations unless the analysis establishes otherwise.</p>
+
+  <h2>Dashboards grouped by feature type</h2>
+  <h3>Routing and message paths</h3>
+  <section class="grid" aria-label="Routing and message path dashboards">
+    <a class="card" href="dashboard_1.html"><span class="tag">Dashboard 1</span><strong>Route participants and duration</strong><span>Participant-count groups, route sample sizes, and duration vs the 2-participant baseline.</span></a>
+    <a class="card" href="dashboard_3.html"><span class="tag">Dashboard 2</span><strong>Transaction type and continuity</strong><span>Direct, Indirect, and Covered records; incomplete-path rates vs Direct baseline.</span></a>
+    <a class="card" href="dashboard_2.html"><span class="tag">Dashboard 3</span><strong>Path continuity and duration</strong><span>Duration for continuous vs incomplete paths, using Y as the comparison baseline.</span></a>
+  </section>
+  <h3>Party profiles and transaction text</h3>
+  <section class="grid" aria-label="Party profile dashboards">
+    <a class="card" href="dashboard_4.html"><span class="tag">Dashboard 4 · Current</span><strong>Business vs Consumer payments</strong><span>Sender/beneficiary types, amounts vs Consumer baseline, and pair mix.</span></a>
+    <a class="card" href="dashboard5.html"><span class="tag">Dashboard 5</span><strong>Party text patterns</strong><span>Engineered token composition and name-field comparisons across party types.</span></a>
+  </section>
+  <h3>Currency and foreign-exchange features</h3>
+  <section class="grid" aria-label="Currency and foreign exchange dashboards">
+    <a class="card" href="dashboard6/dashboard6_version2.html"><span class="tag">Dashboard 6</span><strong>Currency and FX mix</strong><span>Currency usage, FX-step distribution, and filtered-vs-all-currency comparison.</span></a>
+    <a class="card" href="dashboard7/dashboard7_slide(final).html"><span class="tag">Dashboard 7</span><strong>FX steps and duration</strong><span>Median and P90 duration vs the one-conversion baseline.</span></a>
+    <a class="card" href="dashboard_8.html"><span class="tag">Dashboard 8</span><strong>Anomaly labels and payment amounts</strong><span>Label counts and median normalized payment amounts; amounts are not confirmed losses.</span></a>
+  </section>
+  <h3>Anomaly labels and timing</h3>
+  <section class="grid" aria-label="Anomaly and timing dashboards">
+    <a class="card" href="dashboard_9.html"><span class="tag">Dashboard 9</span><strong>Anomaly-label rates by currency</strong><span>Currency groups with at least 50,000 records compared with the eligible-record baseline.</span></a>
+    <a class="card" href="dashboard_10.html"><span class="tag">Dashboard 10</span><strong>Payment anomalies by currency and account type</strong><span>Compare anomaly patterns across currencies and account types.</span></a>
+    <a class="card" href="dashboard_11.html"><span class="tag">Dashboard 11</span><strong>Hourly anomaly-label rates</strong><span>Explore how anomaly-label rates vary across hours of the day.</span></a>
+    <a class="card" href="dashboard11/dashboard_12.html"><span class="tag">Dashboard 12</span><strong>Transaction traffic over time</strong><span>Hourly and weekday volumes compared with even-distribution reference lines.</span></a>
+    <a class="card" href="dashboard_13.html"><span class="tag">Dashboard 13</span><strong>Intermediary banks and payment speed</strong><span>Explore how intermediary-bank routing relates to payment duration.</span></a>
+  </section>
+
+  <h2>Key findings from this dataset</h2>
+  <section class="insights" aria-label="Key validated findings">
+    <article class="insight"><strong>Business sender amounts</strong><p>Business senders are 78.75% of records. Their median normalized amount is $5,537.36 versus $772.62 for Consumer senders; this is descriptive, not a payment-purpose explanation.</p></article>
+    <article class="insight"><strong>Largest party-type pair</strong><p>Business-to-Consumer records are 56.04% of the dataset (5,603,692 records). Party-type fields do not establish whether these are payroll or other payouts.</p></article>
+    <article class="insight"><strong>Path continuity by transaction type</strong><p>The incomplete-path flag is N for 4.99% of Direct, 12.29% of Indirect, and 12.32% of Covered records. N is not a payment failure.</p></article>
+    <article class="insight"><strong>Route participant count</strong><p>Mean duration rises from 663 seconds at two participants to 841 at three and 1,042 at four. This is an observed association; large-count groups are sparse.</p></article>
+    <article class="insight"><strong>Time pattern</strong><p>In Malaysia time (UTC+8), 23:00 is the busiest hour and Friday the busiest day. These describe the synthetic timestamp distribution.</p></article>
+    <article class="insight"><strong>Anomaly labels</strong><p>7,006 records (0.0701%) carry one of the analyzed anomaly labels. Normalized payment amounts are not confirmed losses or fraud outcomes.</p></article>
+  </section>
+
+</main>
+</body>
+</html>
