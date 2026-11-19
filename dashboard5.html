@@ -1,0 +1,668 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Dashboard 5 - Transaction Text Structure</title>
+
+<style>
+
+* {
+    box-sizing: border-box;
+}
+
+html, body {
+    width: 100%;
+    height: 100%;
+    margin: 0;
+    overflow: hidden;
+}
+
+body {
+    padding: 8px 12px;
+    background: #f1f5f2;
+    font-family: Arial, Helvetica, sans-serif;
+    color: #153f32;
+}
+
+.dashboard {
+    width: 100%;
+    height: calc(100vh - 16px);
+    max-width: 1900px;
+    margin: auto;
+
+    display: grid;
+
+    grid-template-rows:
+        45px
+        58px
+        minmax(0, 1fr)
+        12px;
+
+    gap: 6px;
+}
+
+/* HEADER */
+
+.header {
+    background: #104b38;
+    color: white;
+    border-radius: 9px;
+    padding: 0 20px;
+
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.header h1 {
+    font-size: 19px;
+    margin: 0;
+}
+
+.header span {
+    font-size: 9px;
+}
+
+/* KPI CARDS */
+
+.kpis {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 9px;
+    min-height: 0;
+}
+
+.kpi {
+    background: white;
+    border: 1px solid #dce7e0;
+    border-left: 5px solid #168052;
+    border-radius: 8px;
+    padding: 6px 12px;
+
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+
+.kpi-label {
+    font-size: 9px;
+    color: #607b70;
+    margin-bottom: 2px;
+}
+
+.kpi-value {
+    font-size: 21px;
+    font-weight: bold;
+    color: #07583e;
+}
+
+.kpi-note {
+    font-size: 8px;
+    color: #526b61;
+}
+
+/* MAIN LAYOUT */
+
+.main {
+    display: grid;
+    grid-template-columns: 1.15fr 1fr;
+    gap: 8px;
+    min-height: 0;
+    overflow: hidden;
+}
+
+.left-column {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    min-height: 0;
+    overflow: visible;
+}
+
+.right-column {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    min-height: 0;
+    overflow: visible;
+}
+
+/* PANELS */
+
+.panel {
+    background: white;
+    border: 1px solid #dce7e0;
+    border-radius: 8px;
+    padding: 8px 11px;
+    min-height: 0;
+    overflow: hidden;
+}
+
+.panel h2 {
+    font-size: 11px;
+    margin: 0 0 5px;
+    padding-bottom: 4px;
+    border-bottom: 1px solid #dce7e0;
+    color: #07583e;
+}
+
+/* CHART */
+
+.chart-panel {
+    display: flex;
+    flex-direction: column;
+}
+
+.chart-panel img {
+    width: 100%;
+    height: 0;
+    flex: 1;
+    min-height: 0;
+    object-fit: contain;
+}
+
+.chart-baseline-note {
+    margin: 0 0 3px;
+    color: #526b61;
+    font-size: 7.5px;
+}
+
+/* TABLE */
+
+.table-description {
+    font-size: 7.5px;
+    color: #607b70;
+    margin: 0 0 4px;
+}
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 8px;
+}
+
+th {
+    background: #e6f2eb;
+    color: #07583e;
+    text-align: left;
+    padding: 4px;
+}
+
+td {
+    padding: 3.5px 4px;
+    border-bottom: 1px solid #e1eae4;
+    color: #263d33;
+}
+
+/* FINDINGS */
+
+.item {
+    padding: 2.5px 0 3px;
+    border-bottom: 1px solid #e7ede9;
+}
+
+.item:last-child {
+    border-bottom: none;
+}
+
+.item-title {
+    font-size: 8.7px;
+    font-weight: bold;
+    color: #07845b;
+    margin-bottom: 1px;
+}
+
+.item p {
+    margin: 0;
+    font-size: 8px;
+    line-height: 1.22;
+    color: #172d25;
+}
+
+/* EXECUTIVE BRIEF */
+
+.brief p {
+    font-size: 8px;
+    line-height: 1.25;
+    margin: 3px 0 4px;
+}
+
+.core-insight {
+    background: #104b38;
+    color: white;
+    padding: 5px 7px;
+    border-radius: 5px;
+    font-size: 8px;
+    line-height: 1.25;
+    font-weight: bold;
+    margin-top: 4px;
+}
+
+/* RECOMMENDATIONS */
+
+.recommendation {
+    margin-bottom: 5px;
+}
+
+.recommendation-title {
+    color: #07845b;
+    font-size: 8.7px;
+    font-weight: bold;
+    margin-bottom: 1px;
+}
+
+.recommendation p {
+    font-size: 8px;
+    line-height: 1.22;
+    margin: 0;
+    color: #172d25;
+}
+
+/* FOOTER */
+
+.footer {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    color: #71877d;
+    font-size: 7px;
+    padding: 0 4px;
+}
+
+/* SMALLER SCREENS */
+
+@media (max-width: 1100px) {
+
+    html, body {
+        height: auto;
+        overflow: auto;
+    }
+
+    .dashboard {
+        height: auto;
+        display: flex;
+        flex-direction: column;
+    }
+
+    .header {
+        min-height: 55px;
+    }
+
+    .kpis {
+        grid-template-columns: repeat(2, 1fr);
+    }
+
+    .main {
+        display: flex;
+        flex-direction: column;
+        overflow: visible;
+    }
+
+    .left-column, .right-column {
+        display: flex;
+        flex-direction: column;
+        overflow: visible;
+    }
+
+    .chart-panel {
+        height: 500px;
+    }
+
+    .table-panel {
+        min-height: 300px;
+    }
+
+    .right-column .panel {
+        min-height: 150px;
+    }
+
+}
+
+</style>
+<link rel="stylesheet" href="./dashboard_shared.css">
+</head>
+
+<body data-dashboard="5" data-dashboard-root=".">
+
+<div class="dashboard">
+
+<!-- HEADER -->
+
+<header class="header dashboard-header">
+    <div class="dashboard-header-content">
+        <h1>SWIFT Datathon 2026 — Transaction Text Structure &amp; Identity Patterns</h1>
+        <p>Party-text structure and identity tokens · Business is the token-count baseline</p>
+    </div>
+    <span class="dashboard-badge">Dashboard #5</span>
+</header>
+
+<!-- KPI CARDS -->
+
+<section class="kpis">
+
+    <div class="kpi">
+        <div class="kpi-label">TOTAL TRANSACTIONS</div>
+        <div class="kpi-value">10.00M</div>
+        <div class="kpi-note">Complete dataset analysed</div>
+    </div>
+
+    <div class="kpi">
+        <div class="kpi-label">SENDER CONSUMER TOKENS</div>
+        <div class="kpi-value">7.62</div>
+        <div class="kpi-note">Average occurrences per transaction</div>
+    </div>
+
+    <div class="kpi">
+        <div class="kpi-label">SENDER BUSINESS TOKENS</div>
+        <div class="kpi-value">6.79</div>
+        <div class="kpi-note">Average occurrences per transaction</div>
+    </div>
+
+    <div class="kpi">
+        <div class="kpi-label">CONSUMER NAME CO-OCCURRENCE</div>
+        <div class="kpi-value">92.0–92.3%</div>
+        <div class="kpi-note">Last name present when first name exists</div>
+    </div>
+
+</section>
+
+<!-- MAIN CONTENT -->
+
+<main class="main">
+
+<div class="left-column">
+
+    <section class="panel chart-panel">
+
+        <h2>1. Text Structure &amp; Token Analysis</h2>
+        <p class="chart-baseline-note">
+            Business is the baseline; charts compare Consumer text length and token count with Business records.
+        </p>
+
+        <img
+            src="dashboard5_text_structure.png"
+            alt="Text structure and identity pattern charts"
+        >
+
+    </section>
+
+    <section class="panel table-panel">
+
+        <h2>2. Identity &amp; Shared Information Analysis</h2>
+
+        <p class="table-description">
+            Percentage of transactions containing each token at least once,
+            calculated within each column's party-type group. Sample sizes:
+            Sender B 7,874,637; Sender C 2,125,363; Beneficiary B 2,881,550;
+            Beneficiary C 7,118,450.
+        </p>
+
+        <div class="table-scroll">
+        <table>
+
+            <thead>
+                <tr>
+                    <th>Token</th>
+                    <th>Sender B</th>
+                    <th>Sender C</th>
+                    <th>Beneficiary B</th>
+                    <th>Beneficiary C</th>
+                </tr>
+            </thead>
+
+            <tbody>
+
+                <tr><td>business</td><td>85.38%</td><td>0.00%</td><td>85.83%</td><td>0.00%</td></tr>
+                <tr><td>company_keyword</td><td>26.31%</td><td>0.00%</td><td>26.55%</td><td>0.00%</td></tr>
+                <tr><td>first_name</td><td>0.00%</td><td>57.13%</td><td>0.00%</td><td>57.95%</td></tr>
+                <tr><td>last_name</td><td>0.00%</td><td>86.10%</td><td>0.00%</td><td>86.39%</td></tr>
+                <tr><td>street</td><td>69.53%</td><td>70.25%</td><td>72.33%</td><td>72.37%</td></tr>
+                <tr><td>city</td><td>64.81%</td><td>68.83%</td><td>66.14%</td><td>67.46%</td></tr>
+                <tr><td>country_code</td><td>60.52%</td><td>62.06%</td><td>60.79%</td><td>61.19%</td></tr>
+                <tr><td>post_code</td><td>42.76%</td><td>45.79%</td><td>44.40%</td><td>45.80%</td></tr>
+                <tr><td>iban</td><td>49.72%</td><td>53.30%</td><td>47.67%</td><td>50.62%</td></tr>
+
+            </tbody>
+
+        </table>
+        </div>
+
+        <p class="table-description" style="margin-top:4px;">
+            B = Business; C = Consumer.
+        </p>
+
+    </section>
+
+    <section class="panel">
+
+        <h2>3. Key Analytical Findings</h2>
+
+        <div class="item">
+            <div class="item-title">
+                Finding 1 | Participant-dependent Token Composition
+            </div>
+            <p>
+                Consumer records average 7.62 sender tokens and 7.55
+                beneficiary tokens, compared with 6.79 and 6.84 for
+                Business records.
+            </p>
+        </div>
+
+        <div class="item">
+            <div class="item-title">
+                Finding 2 | Distinct Identity Structures
+            </div>
+            <p>
+                Consumer records frequently contain first_name and
+                last_name, while Business records frequently contain
+                business. company_keyword appears less frequently.
+            </p>
+        </div>
+
+        <div class="item">
+            <div class="item-title">
+                Finding 3 | Consumer Name Co-occurrence
+            </div>
+            <p>
+                When first_name is present, last_name is also present
+                in 92.01% of sender and 92.31% of beneficiary
+                Consumer records.
+            </p>
+        </div>
+
+    </section>
+
+</div>
+
+<div class="right-column">
+
+    <section class="panel">
+
+        <h2>3. Key Analytical Findings (continued)</h2>
+
+        <div class="item">
+            <div class="item-title">
+                Finding 4 | Similar Text Lengths
+            </div>
+            <p>
+                Mean text length is about 66–68 characters across the
+                four groups, despite differences in token composition.
+            </p>
+        </div>
+
+        <div class="item">
+            <div class="item-title">
+                Finding 5 | Jurisdiction is the stronger IBAN signal
+            </div>
+            <p>
+                IBAN markers occur in 0% of US, Singapore, and China BICs,
+                versus about 92% for Germany. After country standardization,
+                Business vs Consumer rates are 51.27% vs 50.81% for senders
+                and 50.17% vs 50.16% for beneficiaries.
+            </p>
+        </div>
+
+    </section>
+
+    <section class="panel">
+
+        <h2>4. Reconstructed Business Rules &amp; Patterns</h2>
+
+        <div class="item">
+            <div class="item-title">
+                Rule 1 | Sender token count vs Consumer baseline
+            </div>
+            <p>
+                Among sender records in this 10M-row dataset, Consumer
+                descriptions average 7.62 tokens and Business descriptions
+                6.79 (0.83 fewer, about 10.9% below the Consumer baseline).
+                This describes engineered text features, not identity quality.
+            </p>
+        </div>
+
+        <div class="item">
+            <div class="item-title">
+                Rule 2 | Consumer Name Structure
+            </div>
+            <p>
+                Among Consumer records where first_name is present,
+                last_name is also present in 92.01% of sender and
+                92.31% of beneficiary descriptions. The comparison is
+                conditional on first_name being present.
+            </p>
+        </div>
+
+        <div class="item">
+            <div class="item-title">
+                Rule 3 | Business Identity Structure
+            </div>
+            <p>
+                The business token appears in 85.38% of Business sender
+                descriptions, versus 0% of Consumer sender descriptions;
+                company_keyword appears in 26.31% of Business senders.
+                These are token flags, not verified legal identities.
+            </p>
+        </div>
+
+        <div class="item">
+            <div class="item-title">
+                Rule 4 | Country controls IBAN-marker prevalence
+            </div>
+            <p>
+                BIC8 characters 5–6 encode ISO-2 country. Standardized
+                within-country B/C rates (115 sender and 113 beneficiary
+                countries; at least 1,000 records per type) differ by
+                0.47 pp and 0.01 pp. The marker is synthetic, not
+                IBAN validation.
+            </p>
+        </div>
+
+        <div class="item">
+            <div class="item-title">
+                Rule 5 | Text-Length Consistency
+            </div>
+            <p>
+                Typical text length remains similar across participant
+                types, even when token counts differ. Business is the
+                baseline comparison for the token-count charts.
+            </p>
+        </div>
+
+    </section>
+
+    <section class="panel brief">
+
+        <h2>5. Executive Analytical Brief</h2>
+
+        <p>
+            <strong>Question and hypothesis:</strong> Do Business and
+            Consumer party descriptions have different engineered token
+            patterns? The testable expectation is that Consumer records
+            have more personal-name tokens and Business records have more
+            business-related tokens.
+        </p>
+
+        <p>
+            Compared with the Business sender baseline (6.79 average
+            tokens), Consumer sender descriptions average 7.62 tokens.
+            Consumer records show first-name and last-name tokens, while
+            Business records frequently contain the business token.
+            These are patterns in the dataset's engineered text fields,
+            not verified identity information.
+        </p>
+
+        <p>
+            Party type explains little of the IBAN-marker difference after
+            standardizing for BIC country: the adjusted B/C gaps are only
+            0.47 percentage points for senders and 0.01 for beneficiaries.
+            Country is the stronger observed driver. Average text length
+            remains similar (about 66–68 characters); token rates do not
+            establish identity completeness or quality.
+        </p>
+
+        <div class="core-insight">
+            CORE INSIGHT: Participant type is associated with distinct
+            identity-token structures. Consumer name tokens strongly
+            co-occur, while typical text length remains broadly
+            consistent across participant groups.
+        </div>
+
+    </section>
+
+    <section class="panel">
+
+        <h2>6. Business Implications &amp; Recommendations</h2>
+
+        <div class="recommendation">
+            <div class="recommendation-title">
+                1. Participant-aware Data Standardisation
+            </div>
+            <p>
+                Use identity-field structures appropriate to Business
+                and Consumer records when designing data validation rules.
+            </p>
+        </div>
+
+        <div class="recommendation">
+            <div class="recommendation-title">
+                2. Identity-field Completeness Checks
+            </div>
+            <p>
+                Monitor expected identity fields and co-occurrence
+                patterns, while allowing legitimate incomplete records.
+            </p>
+        </div>
+
+        <div class="recommendation">
+            <div class="recommendation-title">
+                3. Text-quality Monitoring
+            </div>
+            <p>
+                Use token composition and text-length distributions
+                to identify unusual formatting or incomplete descriptions
+                for further review.
+            </p>
+        </div>
+
+    </section>
+
+</div>
+
+</main>
+
+<footer class="footer">
+
+    <span>UMDAC DATATHON 2026 | SWIFT PAYMENT DATA ANALYSIS</span>
+
+    <span>FEATURE GROUP 2 | PARTY PROFILES &amp; DEMOGRAPHICS</span>
+
+</footer>
+
+</div>
+
+<script src="./dashboard_nav.js"></script>
+</body>
+</html>

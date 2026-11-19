@@ -1,0 +1,372 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>SWIFT — Executive Intelligence Dashboard #8</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary-dark: #0f172a;
+            --mint-primary: #00875a;
+            --mint-dark: #006644;
+            --mint-light: #e6f4ea;
+            --mint-border: #34d399;
+            --bg-page: #f1f5f9;
+            --card-bg: #ffffff;
+            --text-main: #1e293b;
+            --text-muted: #475569;
+            --border: #cbd5e1;
+            --border-light: #e2e8f0;
+        }
+
+        html, body {
+            height: 100vh;
+            margin: 0;
+            padding: 8px;
+            overflow: hidden;
+            background-color: var(--bg-page);
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, Roboto, sans-serif;
+            color: var(--text-main);
+            -webkit-font-smoothing: antialiased;
+        }
+
+        .dashboard-wrapper {
+            width: 98vw;
+            max-width: 1750px;
+            height: 98vh;
+            margin: 0 auto;
+            display: grid;
+            grid-template-rows: auto auto 1fr;
+            gap: 10px;
+            box-sizing: border-box;
+        }
+
+        /* 1. Header with Mint Gradient Color Box */
+        .header-card {
+            background: linear-gradient(135deg, #00875a 0%, #006644 100%);
+            border-radius: 10px;
+            padding: 12px 22px;
+            border: 1px solid #005536;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 4px 12px rgba(0, 135, 90, 0.15);
+        }
+        .header-card h1 { margin: 0; font-size: 19px; font-weight: 800; color: #ffffff; letter-spacing: -0.3px; }
+        .header-card p { margin: 3px 0 0 0; font-size: 11.5px; color: #e2f8ed; text-transform: uppercase; font-weight: 600; letter-spacing: 0.5px; }
+        .badge { background: #ffffff; color: var(--mint-dark); border: 1px solid #a3e635; padding: 6px 14px; border-radius: 6px; font-size: 12px; font-weight: 800; text-transform: uppercase; letter-spacing: 0.5px; box-shadow: 0 2px 4px rgba(0,0,0,0.1); }
+
+        /* 2. Top Metric Cards Row */
+        .metrics-row {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 10px;
+        }
+        .metric-card {
+            background: linear-gradient(135deg, #ffffff 0%, #f0fdf4 100%);
+            padding: 10px 16px;
+            border-radius: 8px;
+            border: 1px solid var(--border);
+            border-left: 5px solid var(--mint-primary);
+            box-shadow: 0 2px 4px rgba(0,0,0,0.02);
+        }
+        .metric-card span {
+            display: block;
+            font-size: 11px;
+            font-weight: 700;
+            color: var(--text-muted);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-bottom: 2px;
+        }
+        .metric-card h3 {
+            margin: 0;
+            font-size: 15px;
+            font-weight: 800;
+            color: var(--primary-dark);
+        }
+
+        /* 3. Main 2-Column Split Grid */
+        .main-grid {
+            display: grid;
+            grid-template-columns: 1fr 1.25fr;
+            gap: 10px;
+            min-height: 0;
+            height: 100%;
+        }
+
+        /* Left Column: Charts Stack */
+        .charts-stack {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            min-height: 0;
+            height: 100%;
+        }
+        .chart-widget {
+            background: linear-gradient(135deg, #ffffff 0%, #f8fafc 100%);
+            border-radius: 8px;
+            padding: 8px;
+            border: 1px solid var(--border);
+            box-shadow: 0 2px 4px rgba(0,0,0,0.02);
+            flex: 1;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 0;
+            overflow: hidden;
+            border-top: 3px solid var(--mint-primary);
+        }
+        .chart-widget img {
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
+        }
+
+        /* Right Column */
+        .right-column {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            min-height: 0;
+            height: 100%;
+        }
+
+        /* Card Boxes */
+        .card-box {
+            background: linear-gradient(135deg, #ffffff 0%, #f4fbf7 100%);
+            border-radius: 8px;
+            border: 1px solid var(--border);
+            box-shadow: 0 2px 4px rgba(0,0,0,0.02);
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+            min-height: 0;
+        }
+        
+        .section-title {
+            background: linear-gradient(135deg, #e6f4ea 0%, #d1fae5 100%);
+            color: var(--mint-dark);
+            padding: 8px 14px;
+            font-size: 12px;
+            font-weight: 800;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            border-bottom: 2px solid var(--mint-border);
+        }
+
+        /* Table Styling */
+        table { width: 100%; border-collapse: collapse; font-size: 12px; }
+        th, td { padding: 5px 10px; border-bottom: 1px solid var(--border-light); text-align: left; }
+        th { color: var(--primary-dark); font-size: 10.5px; text-transform: uppercase; background: #f1f5f9; font-weight: 700; }
+        tr:nth-child(even) { background-color: rgba(240, 253, 244, 0.4); }
+        tr:last-child td { border-bottom: none; }
+
+        /* Full Detailed Insights Styling */
+        .insights-content {
+            padding: 10px 14px;
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+            overflow-y: auto;
+            flex: 1;
+            min-height: 0;
+            background: linear-gradient(180deg, #ffffff 0%, #f8fafc 100%);
+        }
+        .insight-section h4 {
+            margin: 0 0 2px 0;
+            color: var(--mint-primary);
+            font-size: 12px;
+            text-transform: uppercase;
+            font-weight: 800;
+            letter-spacing: 0.3px;
+        }
+        .insight-section p {
+            margin: 0 0 3px 0;
+            color: var(--text-main);
+            font-size: 12px;
+            line-height: 1.35;
+        }
+        .insight-section ul {
+            margin: 2px 0 0 16px;
+            padding: 0;
+            color: var(--text-main);
+            font-size: 12px;
+            line-height: 1.3;
+        }
+        .insight-section li {
+            margin-bottom: 2px;
+        }
+        .rule-callout {
+            background: #f0fdf4;
+            border-left: 4px solid var(--mint-primary);
+            padding: 6px 10px;
+            margin: 3px 0;
+            border-radius: 0 6px 6px 0;
+            font-size: 11.5px;
+            color: #166534;
+        }
+        .badge-rose { background: #ffe4e6; color: #be123c; padding: 2px 6px; border-radius: 4px; font-weight: 700; font-size: 10px; }
+        .badge-teal { background: #ccfbf1; color: #0f766e; padding: 2px 6px; border-radius: 4px; font-weight: 700; font-size: 10px; }
+        .badge-sky { background: #e0f2fe; color: #0369a1; padding: 2px 6px; border-radius: 4px; font-weight: 700; font-size: 10px; }
+    </style>
+<link rel="stylesheet" href="./dashboard_shared.css">
+</head>
+<body data-dashboard="8" data-dashboard-root=".">
+
+<div class="dashboard-wrapper">
+    <!-- 1. Header with Gradient Color Box -->
+    <div class="header-card dashboard-header">
+        <div class="dashboard-header-content">
+            <h1>SWIFT Datathon 2026 — Anomaly Labels &amp; Payment Amounts</h1>
+            <p>Anomaly-label frequency and median amounts · Records without the displayed labels are the amount baseline</p>
+        </div>
+        <div class="badge dashboard-badge">Dashboard #8</div>
+    </div>
+
+    <!-- 2. Top Metric Cards Row -->
+    <div class="metrics-row">
+        <div class="metric-card">
+            <span>Most Frequent Label</span>
+            <h3>Romance scam (2,476)</h3>
+        </div>
+        <div class="metric-card">
+            <span>All Labelled Records</span>
+            <h3>7,006 of 10,000,000 (0.0701%)</h3>
+        </div>
+        <div class="metric-card">
+            <span>Highest Median Amount</span>
+            <h3>Fat-finger: $260,241.23</h3>
+        </div>
+        <div class="metric-card">
+            <span>Other-record median baseline</span>
+            <h3>$3,662.58 (n=9,992,994)</h3>
+        </div>
+    </div>
+
+    <!-- 3. Main 2-Column Split Grid -->
+    <div class="main-grid">
+        
+        <!-- Left: Large Charts Stack -->
+        <div class="charts-stack">
+            <div class="chart-widget">
+                <img src="dashboard8_chart1_anomalies.png" alt="Dataset-derived count of records by anomaly label">
+            </div>
+            <div class="chart-widget">
+                <img src="dashboard8_chart2_exposure.png" alt="Median normalized payment amount for anomaly-labelled records">
+            </div>
+        </div>
+
+        <!-- Right: Compact Table & Expanded Economic Brief -->
+        <div class="right-column">
+            
+            <!-- Performance Matrix Table -->
+            <div class="card-box" style="flex: 0.55;">
+                <div class="section-title">Anomaly-label counts and median payment amount</div>
+                <div style="overflow-y: auto;">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Anomaly label</th>
+                                <th>Records</th>
+                                <th>Share of all records</th>
+                                <th>Median USD amount</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td><strong>Romance scam</strong></td>
+                                <td>2,476</td>
+                                <td>0.0248%</td>
+                                <td>$109.45</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Fat-finger mistake</strong></td>
+                                <td>1,940</td>
+                                <td>0.0194%</td>
+                                <td>$260,241.23</td>
+                            </tr>
+                            <tr>
+                                <td><strong>CEO scam</strong></td>
+                                <td>945</td>
+                                <td>0.0095%</td>
+                                <td>$20,602.13</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Duplicate payment</strong></td>
+                                <td>679</td>
+                                <td>0.0068%</td>
+                                <td>$2,888.63</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Account replacement</strong></td>
+                                <td>649</td>
+                                <td>0.0065%</td>
+                                <td>$3,977.30</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Customer recall</strong></td>
+                                <td>317</td>
+                                <td>0.0032%</td>
+                                <td>$3,163.97</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- Comprehensive Executive Analytical Brief -->
+            <div class="card-box" style="flex: 1.45;">
+                <div class="section-title">Observed pattern, interpretation, and limits</div>
+                <div class="insights-content">
+                    <div class="insight-section">
+                        <h4>1. Tested question and result</h4>
+                        <p>Question: How do the six displayed anomaly-label groups compare with other records? Of 10,000,000 records, 7,006 have one of those labels (0.0701%); the other 9,992,994 form the baseline. Romance scam is most frequent (2,476). Fat-finger records have a $260,241.23 median normalized amount versus $3,662.58 for the baseline.</p>
+                    </div>
+
+                    <div class="insight-section">
+                        <h4>2. Reconstructed rule</h4>
+                        <p>For records assigned one of the six displayed <code>ANOMALY_TYPE</code> labels, group by label and compare counts and median <code>USD_AMOUNT</code> with the records outside those label groups. Fat-finger-labelled records have a median about 71× the other-record baseline. This is a descriptive comparison, not a confirmed fraud-loss estimate.</p>
+                    </div>
+
+                    <div class="insight-section">
+                        <h4>3. Business interpretation</h4>
+                        <p>Higher amounts in a category may justify closer review, but amount alone does not establish a loss, fraud success, or preventability.</p>
+                    </div>
+
+                    <div class="insight-section">
+                        <h4>4. Sequence and graph signatures</h4>
+                        <ul>
+                            <li>Among 1,976 same-sender/beneficiary Romance Scam transitions, 1,920 (97.2%) are within 18 minutes and 1,642 (83.1%) increase in normalized USD amount; the median next/previous ratio is 1.50, not a rule for every transfer.</li>
+                            <li>Duplicate Payment has 494 exact repeated normalized-USD transitions; the median interval is 1,099 seconds (18.3 minutes), and 242 of 494 are within 18 minutes.</li>
+                            <li>Seven CEO-scam beneficiary accounts and three account-replacement beneficiary accounts each have at least 7 distinct sender accounts; the maxima are 10 and 13, respectively.</li>
+                            <li>1,938 of 1,939 Fat-finger sender/beneficiary pairs occur once; all 317 Customer Recall pairs occur once. Their trigger is not observable.</li>
+                        </ul>
+                    </div>
+
+                    <div class="insight-section">
+                        <h4>5. Method and limitation</h4>
+                        <div class="rule-callout">
+                            <strong>Scope:</strong> Sequence checks use labelled rows grouped by account pair and compare <code>USD_AMOUNT</code>, not raw-currency amounts. These are synthetic labels and normalized values; the dataset does not provide confirmed losses, account balances, or intervention outcomes.
+                        </div>
+                    </div>
+
+                    <div class="insight-section">
+                        <h4>6. Practical follow-up</h4>
+                        <ul>
+                            <li>Compare labelled and unlabelled records using party type, route, time, and amount distributions.</li>
+                            <li>Show sample sizes alongside each category comparison.</li>
+                            <li>Describe prevention ideas as recommendations to investigate, not effects proven by this dataset.</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+
+    </div>
+</div>
+
+<script src="./dashboard_nav.js"></script>
+</body>
+</html>
